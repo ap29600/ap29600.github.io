@@ -7,6 +7,7 @@
   <title>Just cos</title>
   <style>
     html {
+      font-size: 14pt;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -223,24 +224,10 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", function () {
- var mathElements = document.getElementsByClassName("math");
- var macros = [];
- for (var i = 0; i < mathElements.length; i++) {
-  var texText = mathElements[i].firstChild;
-  if (mathElements[i].tagName == "SPAN") {
-   katex.render(texText.data, mathElements[i], {
-    displayMode: mathElements[i].classList.contains('display'),
-    throwOnError: false,
-    macros: macros,
-    fleqn: false
-   });
-}}});
-  </script>
-  <link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -253,128 +240,133 @@ floating point numbers</p>
 </header>
 <h2 id="notation">Notation:</h2>
 <ul>
-<li><span class="math inline">\sin</span> and <span
-class="math inline">\cos</span> are mathematical functions taking the
-argument in radians</li>
-<li><span class="math inline">\text{tsin}</span> and <span
-class="math inline">\text{tcos}</span> are mathematical functions taking
-the argument in turns</li>
+<li><span class="math inline">\(\sin\)</span> and <span
+class="math inline">\(\cos\)</span> are mathematical functions taking
+the argument in radians</li>
+<li><span class="math inline">\(\text{tsin}\)</span> and <span
+class="math inline">\(\text{tcos}\)</span> are mathematical functions
+taking the argument in turns</li>
 <li><code>sin</code> and <code>cos</code> are the <code>C</code>
-functions that calculate <span class="math inline">\sin</span> and <span
-class="math inline">\cos</span> on <code>double</code>s</li>
+functions that calculate <span class="math inline">\(\sin\)</span> and
+<span class="math inline">\(\cos\)</span> on <code>double</code>s</li>
 <li><code>tsin</code> and <code>tcos</code> are the <code>C</code>
-functions that calculate <span class="math inline">\text{tsin}</span>
-and <span class="math inline">\text{tcos}</span> on
-<code>double</code>s</li>
+functions that calculate <span
+class="math inline">\(\text{tsin}\)</span> and <span
+class="math inline">\(\text{tcos}\)</span> on <code>double</code>s</li>
 <li><code>isin</code> and <code>icos</code> are the <code>C</code>
-functions that calculate <span class="math inline">\text{tsin}</span>
-and <span class="math inline">\text{tcos}</span> on fixed point
-numbers</li>
+functions that calculate <span
+class="math inline">\(\text{tsin}\)</span> and <span
+class="math inline">\(\text{tcos}\)</span> on fixed point numbers</li>
 </ul>
 <h2 id="choosing-turns-over-radians">Choosing turns over radians</h2>
 <p>This is a tough decision for a mathematician to do, but <span
-class="math inline">\pi</span> is irrational and computer numbers are
-rationals. What’s more, they are (almost always) multiples of a power of
-2. This means that, in floating point numbers of <strong>any</strong>
-precision, <code>sin</code><span class="math inline">(\pi) \ne 0</span>,
-because the argument is rounded before being passed to the function. If
-we use turns, though, more of the meaningful angles are exactly
-representable: <code>tsin</code><span class="math inline">(\frac 1 2) =
-0</span>; in fact, <span class="math inline">\forall n \in
-\mathbb{N},</span> <code>tsin</code><span class="math inline">(\frac n
-2) = 0</span> and <code>tcos</code><span class="math inline">(\frac n 2)
-= \pm 1</span>, always, with exactly zero error.</p>
+class="math inline">\(\pi\)</span> is irrational and computer numbers
+are rationals. What’s more, they are (almost always) multiples of a
+power of 2. This means that, in floating point numbers of
+<strong>any</strong> precision, <code>sin</code><span
+class="math inline">\((\pi) \ne 0\)</span>, because the argument is
+rounded before being passed to the function. If we use turns, though,
+more of the meaningful angles are exactly representable:
+<code>tsin</code><span class="math inline">\((\frac 1 2) = 0\)</span>;
+in fact, <span class="math inline">\(\forall n \in \mathbb{N},\)</span>
+(ok, more like <span class="math inline">\(\forall n \in
+\mathbb{N}\cap[-2^{54}+1,2^{54}-1]\)</span>, you get the point.)
+<code>tsin</code><span class="math inline">\((\frac n 2) = 0\)</span>
+and <code>tcos</code><span class="math inline">\((\frac n 2) = \pm
+1\)</span>, always, with exactly zero error.</p>
 <p>Moreover (and this is completely anecdotal) the most common operation
 that a user does before feeding an exact value to <code>sin</code> or
 <code>cos</code> is likely to multiply it by some integer multiple of
-<span class="math inline">\pi</span>, and the first thing that (at least
-some) mathematical library does is immediately divide by <span
-class="math inline">2\pi</span>.</p>
+<span class="math inline">\(\pi\)</span>, and the first thing that (at
+least some) mathematical library does is immediately divide by <span
+class="math inline">\(2\pi\)</span>.</p>
 <h2 id="polynomial-interpolation">Polynomial interpolation</h2>
 <p>A common strategy for evaluating transcendental functions on computer
 hardware is to find a good enough interpolating polynomial for a small
 subset of the function’s domain, and then to refer the other values back
 to that subset by some symmetry.</p>
 <p>For our purposes, we will first focus on finding an interpolating
-polynomial for the <span class="math inline">\cos</span> function on the
-range <span class="math inline">[-\frac\pi 4, \frac\pi 4)</span> (or
-rather for the <span class="math inline">\text{tcos}</span> function on
-the corresponding range <span class="math inline">[-\frac 1 8, \frac 1
-8)</span>). Then the <span class="math inline">\text{tcos}</span>
-function can be calculated by multiplying the angle by 4: then the
-integer part mod 4 tells us what function to apply:</p>
+polynomial for the <span class="math inline">\(\cos\)</span> function on
+the range <span class="math inline">\([-\frac\pi 4, \frac\pi 4)\)</span>
+(or rather for the <span class="math inline">\(\text{tcos}\)</span>
+function on the corresponding range <span class="math inline">\([-\frac
+1 8, \frac 1 8)\)</span>). Then the <span
+class="math inline">\(\text{tcos}\)</span> function can be calculated by
+multiplying the angle by 4: then the integer part mod 4 tells us what
+function to apply:</p>
 <ul>
-<li>if <span class="math inline">\left\lfloor4x\right\rceil \equiv 0
-\pmod{4}</span>, calculate <span
-class="math inline">+</span><code>icos</code><span
-class="math inline">\left(2^{63} \cdot 8\left(x -
-\frac{\left\lfloor4x\right\rceil}{4}\right)\right)</span></li>
-<li>if <span class="math inline">\left\lfloor4x\right\rceil \equiv 1
-\pmod{4}</span>, calculate <span
-class="math inline">-</span><code>isin</code><span
-class="math inline">\left(2^{63} \cdot 8\left(x -
-\frac{\left\lfloor4x\right\rceil}{4}\right)\right)</span></li>
-<li>if <span class="math inline">\left\lfloor4x\right\rceil \equiv 2
-\pmod{4}</span>, calculate <span
-class="math inline">-</span><code>icos</code><span
-class="math inline">\left(2^{63} \cdot 8\left(x -
-\frac{\left\lfloor4x\right\rceil}{4}\right)\right)</span></li>
-<li>if <span class="math inline">\left\lfloor4x\right\rceil \equiv 3
-\pmod{4}</span>, calculate <span
-class="math inline">+</span><code>isin</code><span
-class="math inline">\left(2^{63} \cdot 8\left(x -
-\frac{\left\lfloor4x\right\rceil}{4}\right)\right)</span></li>
+<li>if <span class="math inline">\(\left\lfloor4x\right\rceil \equiv 0
+\pmod{4}\)</span>, calculate <span
+class="math inline">\(+\)</span><code>icos</code><span
+class="math inline">\(\left(2^{63} \cdot 8\left(x -
+\frac{\left\lfloor4x\right\rceil}{4}\right)\right)\)</span></li>
+<li>if <span class="math inline">\(\left\lfloor4x\right\rceil \equiv 1
+\pmod{4}\)</span>, calculate <span
+class="math inline">\(-\)</span><code>isin</code><span
+class="math inline">\(\left(2^{63} \cdot 8\left(x -
+\frac{\left\lfloor4x\right\rceil}{4}\right)\right)\)</span></li>
+<li>if <span class="math inline">\(\left\lfloor4x\right\rceil \equiv 2
+\pmod{4}\)</span>, calculate <span
+class="math inline">\(-\)</span><code>icos</code><span
+class="math inline">\(\left(2^{63} \cdot 8\left(x -
+\frac{\left\lfloor4x\right\rceil}{4}\right)\right)\)</span></li>
+<li>if <span class="math inline">\(\left\lfloor4x\right\rceil \equiv 3
+\pmod{4}\)</span>, calculate <span
+class="math inline">\(+\)</span><code>isin</code><span
+class="math inline">\(\left(2^{63} \cdot 8\left(x -
+\frac{\left\lfloor4x\right\rceil}{4}\right)\right)\)</span></li>
 </ul>
 <p>We want a few good properties of this polynomial; first, we want it
 to be a close approximation, which means that for all values of <span
-class="math inline">x \in [-\frac 1 8, \frac 1 8)</span>, the absolute
-error <span class="math inline">|p(x) - \text{tcos}(x)|</span> is
-smaller than some defined threshold. Since the goal is implementing
-trigonometric functions for posit arithmetic, we’re looking for an error
-in the order of <span class="math inline">2^{-61}</span>, which
-corresponds to about 1ULP (unit in last place) for the posit value <span
-class="math inline">\frac{\sqrt{2}}{2}</span> (which is the smallest
+class="math inline">\(x \in [-\frac 1 8, \frac 1 8)\)</span>, the
+absolute error <span class="math inline">\(|p(x) -
+\text{tcos}(x)|\)</span> is smaller than some defined threshold. Since
+the goal is implementing trigonometric functions for posit arithmetic,
+we’re looking for an error in the order of <span
+class="math inline">\(2^{-61}\)</span>, which corresponds to about 1ULP
+(unit in last place) for the posit value <span
+class="math inline">\(\frac{\sqrt{2}}{2}\)</span> (which is the smallest
 output value we need to care about); this also means that we need to do
 significantly better than <code>double</code> precision arithmetic,
 which only has 53 bits of precision and as such can get away with an
-error below <span class="math inline">2^{-54}</span>.</p>
+error below <span class="math inline">\(2^{-54}\)</span>.</p>
 <p>Second, we want it to be cheap to evaluate: for polynomials this
 means to have as small of a degree as possible, in our case a degree 14
 polynomial is enough, however the terms of odd degree will be zero due
-to <span class="math inline">\text{tcos}</span> being an even function,
-and only 6 terms (plus the constant term) will be used.</p>
+to <span class="math inline">\(\text{tcos}\)</span> being an even
+function, and only 6 terms (plus the constant term) will be used.</p>
 <h2
 id="im-going-to-be-real-with-you-chief-im-not-doing-that-by-hand.">I’m
 going to be real with you chief, I’m not doing that by hand.</h2>
 <p>Obviously, finding the best polynomial to approximate <span
-class="math inline">\text{tcos}</span> would take forever to do by hand,
-considering that the coefficients need about the same number of
+class="math inline">\(\text{tcos}\)</span> would take forever to do by
+hand, considering that the coefficients need about the same number of
 significant digits that we want in our result. Fortunately interpolating
 polynomials are very well researched, and getting a computer to do the
 heavy lifting for us will be pretty easy; the first order of business is
 getting some accurate samples of the <span
-class="math inline">\text{tcos}</span> function.</p>
+class="math inline">\(\text{tcos}\)</span> function.</p>
 <p>Standing on the shoulders of giants, we know that for maximum
 numerical accuracy it’s a good idea <strong>not</strong> to use
 equidistant samples, which would incur <a
 href="https://en.wikipedia.org/wiki/Runge%27s_phenomenon">Runge’s
 phenomenon</a>, but instead to choose a set of <a
 href="https://en.wikipedia.org/wiki/Chebyshev_nodes">Chebyshev
-nodes</a>, obtained through the formula: <span class="math display">
+nodes</a>, obtained through the formula: <span class="math display">\[
 x_k = a + (b-a) \cos\left(\frac k n \pi\right)
-</span> where <span class="math inline">[a, b]</span> is the interval we
-want to approximate our function on.</p>
+\]</span> where <span class="math inline">\([a, b]\)</span> is the
+interval we want to approximate our function on.</p>
 <p>Ok then, we ask Wolfram Alpha (which supposedly calculates <span
-class="math inline">\cos</span> accurately enough for our purposes) with
-a series of queries like this:</p>
-<p><code>round(cos(k/14 * pi) * 2^63)</code></p>
-<p><code>round(cos(cos(k/14 * pi) * pi/4) * 2^63)</code></p>
+class="math inline">\(\cos\)</span> accurately enough for our purposes)
+with a series of queries like this:</p>
+<p><code>round(cos(k/14 * pi) * 2^63) for k in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14}</code></p>
+<p><code>round(cos(cos(k/14 * pi) * pi/4) * 2^63) for k in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14}</code></p>
 <p>and get back our data:</p>
 <table>
 <thead>
 <tr class="header">
-<th><span class="math inline">x \cdot 2^{63}</span></th>
-<th><span class="math inline">y \cdot 2^{63}</span></th>
+<th><span class="math inline">\(x \cdot 2^{63}\)</span></th>
+<th><span class="math inline">\(y \cdot 2^{63}\)</span></th>
 </tr>
 </thead>
 <tbody>
@@ -488,36 +480,77 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a 
 <p>One way to find the interpolating polynomial given a set of nodes is
 through <a
 href="https://en.wikipedia.org/wiki/Newton_polynomial#Main_idea">Newton’s
-polynomial</a> form: we construct the lower triangular matrix as a list
-of lists (here I rounded the values for printing).</p>
+polynomial</a> form:</p>
+<p>our coefficients are the entries of a vector <span
+class="math inline">\(\underline{c}\)</span> such that:</p>
+<p><span class="math display">\[\begin{equation*}
+    \begin{bmatrix}
+        1       &amp;0           &amp;0                      &amp;\dots  &amp;0                          \\
+        1       &amp;(x_1 - x_0)
+&amp;0                      &amp;\dots  &amp;0                          \\
+        \vdots  &amp;\vdots      &amp;\vdots                 &amp;\ddots
+&amp;\vdots                     \\
+        1       &amp;(x_n - x_0) &amp;(x_n - x_0)(x_n - x_0)
+&amp;\dots  &amp;(x_n-x_0)\dots(x_n-x_{n-1})\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        c_0 \\ c_1 \\ \vdots \\ c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        y_0 \\ y_1 \\ \vdots \\ y_n
+    \end{bmatrix}
+\end{equation*}\]</span></p>
+<p>we construct the lower triangular matrix as a list of lists (here I
+rounded the values for printing).</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>newtonMatrix <span class="ot">=</span> <span class="fu">map</span> (<span class="fu">takeWhile</span> (<span class="op">/=</span><span class="dv">0</span>) <span class="op">.</span> <span class="fu">scanl</span> (<span class="op">*</span>) <span class="dv">1</span> <span class="op">.</span> <span class="fu">zipWith</span> (<span class="fu">flip</span> (<span class="op">-</span>)) xs <span class="op">.</span> <span class="fu">repeat</span>) xs</span></code></pre></div>
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>newtonMatrix <span class="ot">=</span> <span class="fu">map</span> row xs</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> row <span class="ot">=</span> <span class="fu">takeWhile</span> (<span class="op">/=</span><span class="dv">0</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>              <span class="op">.</span> <span class="fu">scanl</span> (<span class="op">*</span>) <span class="dv">1</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>              <span class="op">.</span> <span class="fu">zipWith</span> (<span class="fu">flip</span> (<span class="op">-</span>)) xs</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>              <span class="op">.</span> <span class="fu">repeat</span></span></code></pre></div>
 <pre><code>[[1.0]
  [1.0,2.5072087818176395e-2]
  [1.0,9.903113209758087e-2,7.324247883844538e-3]
  [1.0,0.2181685175319702,4.212756181137467e-2,5.0189675689328046e-3]
- [1.0,0.37651019814126646,0.13232003255213892,3.671603905143758e-2,5.81367932 ...
- [1.0,0.5661162608824418,0.30629390422737474,0.1430653277020612,4.97792579256 ...
- [1.0,0.7774790660436856,0.5849806747155206,0.3968789301591433,0.221978572120 ...
- [1.0,1.0,0.9749279121818236,0.8783796973249267,0.6867449009293668,0.42817844 ...
+ [1.0,0.37651019814126646,0.13232003255213892,3.671603905143758e- ...
+ [1.0,0.5661162608824418,0.30629390422737474,0.1430653277020612,4 ...
+ [1.0,0.7774790660436856,0.5849806747155206,0.3968789301591433,0. ...
+ [1.0,1.0,0.9749279121818236,0.8783796973249267,0.686744900929366 ...
 ...]</code></pre>
 <p>then the coefficients to Newton’s form can be obtained by solving the
 triangular system:</p>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>newtonCoefficients <span class="ot">=</span> <span class="fu">zipWith</span> fn newtonMatrix ys</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> fn row y <span class="ot">=</span> (y <span class="op">-</span> ((<span class="fu">init</span> row) <span class="ot">`dot`</span> newtonCoefficients)) <span class="op">/</span> (<span class="fu">last</span> row)</span>
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>newtonCoeff <span class="ot">=</span> <span class="fu">zipWith</span> fn newtonMatrix ys</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> fn row y <span class="ot">=</span> (y <span class="op">-</span> ((<span class="fu">init</span> row) <span class="ot">`dot`</span> newtonCoeff)) <span class="op">/</span> (<span class="fu">last</span> row)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        as <span class="ot">`dot`</span> bs <span class="ot">=</span> <span class="fu">sum</span> <span class="op">$</span> <span class="fu">zipWith</span> (<span class="op">*</span>) as bs</span></code></pre></div>
-<pre><code>[0.7071067811865476,0.5498566944938549,-0.22502818791042026,-5.310916131098175 ...</code></pre>
-<p>finally we can convert the coefficients from Newton’s form to power
-series form, by distributing the products:</p>
+<pre><code>[0.7071067811865476,0.5498566944938549,-0.22502818791042026,-5.31 ...</code></pre>
+<p>these are not particularly comfortable to use in our case though,
+because the evaluation formula for newton’s polynomial still involves
+the sample positions <span class="math inline">\(x_0 \dots
+x_n\)</span>:</p>
+<p><span class="math display">\[
+P(x) = \sum_{i=0}^n \left(c_j \prod_{j=0}^{i-1} (x - x_j)\right)
+\]</span></p>
+<p>in order to get a cheaper evaluation formula, we can rewrite the
+equation in the following form and distribute the products to get the
+power series form of the polynomial: <span class="math display">\[
+P(x) = c_0 + (x - x_0)(c_1 + (x - x_1)(c_2 + (x - x_2)(\dots + (x -
+x_{n-1})c_n\dots)))
+.\]</span></p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>powerSeries [c] _ <span class="ot">=</span> [c]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>powerSeries (c<span class="op">:</span>cs) (x<span class="op">:</span>xs) <span class="ot">=</span> (c<span class="op">+</span>constantTerm)<span class="op">:</span>rest</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>powerSeries (c<span class="op">:</span>cs) (x<span class="op">:</span>xs) <span class="ot">=</span> (c<span class="op">+</span><span class="fu">const</span>)<span class="op">:</span>rest</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> psc&#39; <span class="ot">=</span> powerSeries cs xs</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        (constantTerm<span class="op">:</span>rest) <span class="ot">=</span> <span class="fu">zipWith</span> (<span class="op">-</span>) (<span class="dv">0</span><span class="op">:</span>psc&#39;) <span class="op">$</span> <span class="fu">map</span> (x<span class="op">*</span>) (psc&#39;<span class="op">++</span>[<span class="dv">0</span>])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">const</span><span class="op">:</span>rest) <span class="ot">=</span> <span class="fu">zipWith</span> (<span class="op">-</span>) (<span class="dv">0</span><span class="op">:</span>psc&#39;) <span class="op">$</span> <span class="fu">map</span> (x<span class="op">*</span>) (psc&#39;<span class="op">++</span>[<span class="dv">0</span>])</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>coefficients <span class="ot">=</span> powerSeries newtonCoefficients xs</span></code></pre></div>
-<p>then we can print our result, converted to fixnum:</p>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>coefficients <span class="ot">=</span> powerSeries newtonCoeff xs</span></code></pre></div>
+<p>the result are coefficients <span
+class="math inline">\(\tilde{c}_j\)</span> such that <span
+class="math display">\[
+P(x) = \sum_{j=0}^n \tilde{c}_j x^j
+.\]</span></p>
+<p>we can print our result, converted to fixnum:</p>
 <div class="sourceCode" id="cb7"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="fu">mapM</span> (<span class="fu">print</span> <span class="op">.</span> <span class="fu">round</span> <span class="op">.</span> (<span class="op">*</span>(<span class="dv">2</span><span class="op">^</span><span class="dv">63</span>))) coefficients</span></code></pre></div>
 <pre><code>9223372036854775808
@@ -536,15 +569,15 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a 
 0
 -3557527</code></pre>
 <p>The first is the constant term, which we can verify is equal to <span
-class="math inline">2^{63}</span>, and represents <code>icos</code><span
-class="math inline">(0)</span>; after that every other term is zero,
-which matches up with our prediction; the remaining terms alternate
-signs, similar to the Taylor coefficients for <span
-class="math inline">\cos</span>’ power series. In fact, they are nearly
-identical accounting for the rescaling.</p>
+class="math inline">\(2^{63}\)</span>, and represents
+<code>icos</code><span class="math inline">\((0)\)</span>; after that
+every other term is zero, which matches up with our prediction; the
+remaining terms alternate signs, similar to the Taylor coefficients for
+<span class="math inline">\(\cos\)</span>’ power series. In fact, they
+are nearly identical accounting for the rescaling.</p>
 <h2 id="evaluating-the-polynomial">Evaluating the polynomial</h2>
 <p>The formula we want to evaluate now is: <span
-class="math display">\begin{align*}
+class="math display">\[\begin{align*}
     \text{tcos}(\alpha) \sim 1
     &amp;- \frac{2844719788994575527}{2^{63}} \alpha^2
      + \frac{146230515361076815} {2^{63}} \alpha^4
@@ -553,10 +586,10 @@ class="math display">\begin{align*}
      - \frac{226999764641}       {2^{63}} \alpha^{10}
      + \frac{1060732338}         {2^{63}} \alpha^{12}
      - \frac{3557527}            {2^{63}} \alpha^{14}
-\end{align*}</span></p>
+\end{align*}\]</span></p>
 <p>since our input and output are fixed point numbers, what we will end
 up is:</p>
-<p><span class="math display">\begin{align*}
+<p><span class="math display">\[\begin{align*}
     \text{icos}(t) = 2^{63}
     &amp;- 2844719788994575527 \left(\frac{t}{2^{63}}\right)^2
      + 146230515361076815  \left(\frac{t}{2^{63}}\right)^4
@@ -565,17 +598,17 @@ up is:</p>
      - 226999764641        \left(\frac{t}{2^{63}}\right)^{10}
      + 1060732338          \left(\frac{t}{2^{63}}\right)^{12}
      - 3557527             \left(\frac{t}{2^{63}}\right)^{14}
-\end{align*}</span> Now, we obviously can’t calculate <span
-class="math inline">\frac t {2^{63}}</span> right away, as that would
-always be <span class="math inline">0</span> or <span
-class="math inline">\pm 1</span> when rounded to an integer and we would
-lose all our precision; we also would like as many of our divisions to
-have a denominator of exactly <span class="math inline">2^{64}</span>,
-since that’s equivalent to taking the higher word of a merged 128-bit
-register, which on x86_64 is very cheap (good ol’
-<code>_mulx_u64</code>).</p>
+\end{align*}\]</span> Now, we obviously can’t calculate <span
+class="math inline">\(\frac t {2^{63}}\)</span> right away, as that
+would always be <span class="math inline">\(0\)</span> or <span
+class="math inline">\(\pm 1\)</span> when rounded to an integer and we
+would lose all our precision; we also would like as many of our
+divisions to have a denominator of exactly <span
+class="math inline">\(2^{64}\)</span>, since that’s equivalent to taking
+the higher word of a merged 128-bit register, which on x86_64 is very
+cheap (good ol’ <code>_mulx_u64</code>).</p>
 <p>we perform the following substitution: <span
-class="math display">\begin{align*}
+class="math display">\[\begin{align*}
     x_2 = \frac{t^2}{2^{62}} &amp;= \left(\frac{t}{2^{63}}\right)^2
 2^{64} \\
     x_{2n+2} = \frac{x_{2n} \cdot x_2}{2^{64}} &amp;=
@@ -588,7 +621,7 @@ class="math display">\begin{align*}
      - \frac{x_{10} \cdot 226999764641       }{2^{64}}
      + \frac{x_{12} \cdot 1060732338         }{2^{64}}
      - \frac{x_{14} \cdot 3557527            }{2^{64}}
-\end{align*}</span> We implement that in <code>C</code> as:</p>
+\end{align*}\]</span> We implement that in <code>C</code> as:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">uint64_t</span> icos<span class="op">(</span><span class="dt">int64_t</span> t<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">static</span> <span class="dt">const</span> <span class="dt">uint64_t</span> c<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2844719788994575527</span><span class="op">,</span></span>
@@ -625,8 +658,8 @@ which we don’t really use fully: we only care about the upper half of
 the result which on x86_64 gets stored in <code>rdx</code> after a
 multiplication.</p>
 <p>Now all our multiplications are between numbers in the range <span
-class="math inline">[0,2^{64})</span>, there’s no integer division in
-sight and… wait, what’s that?</p>
+class="math inline">\([0,2^{64})\)</span>, there’s no integer division
+in sight and… wait, what’s that?</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>icos<span class="op">(</span>INT64_MIN<span class="op">);</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dv">9223372036854775808</span></span></code></pre></div>
 <p>Yeah uhm, it turns out that

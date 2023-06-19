@@ -2,6 +2,7 @@
 geometry: margin=1in
 title: Just `cos`
 subtitle: lessons learned implementing trig functions without floating point numbers
+fontsize: 14pt
 ---
 
 ## Notation:
@@ -22,8 +23,9 @@ of a power of 2. This means that, in floating point numbers of __any__
 precision, `sin`$(\pi) \ne 0$, because the argument is rounded before being
 passed to the function. If we use turns, though, more of the meaningful angles
 are exactly representable: `tsin`$(\frac 1 2) = 0$; in fact, $\forall n \in
-\mathbb{N},$ `tsin`$(\frac n 2) = 0$ and `tcos`$(\frac n 2) = \pm 1$, always,
-with exactly zero error.
+\mathbb{N},$ (ok, more like $\forall n \in \mathbb{N}\cap[-2^{54}+1,2^{54}-1]$, you
+get the point.) `tsin`$(\frac n 2) = 0$ and `tcos`$(\frac n 2) = \pm 1$,
+always, with exactly zero error.
 
 Moreover (and this is completely anecdotal) the most common operation that a
 user does before feeding an exact value to `sin` or `cos` is likely to multiply
@@ -84,9 +86,9 @@ where $[a, b]$ is the interval we want to approximate our function on.
 Ok then, we ask Wolfram Alpha (which supposedly calculates $\cos$ accurately
 enough for our purposes) with a series of queries like this:
 
-`round(cos(k/14 * pi) * 2^63)`
+`round(cos(k/14 * pi) * 2^63) for k in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14}`
 
-`round(cos(cos(k/14 * pi) * pi/4) * 2^63)`
+`round(cos(cos(k/14 * pi) * pi/4) * 2^63) for k in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14}`
 
 and get back our data:
 
@@ -158,11 +160,35 @@ ys = map (/(2^63)) ys'
 
 One way to find the interpolating polynomial given a set of nodes is through
 [Newton's polynomial](https://en.wikipedia.org/wiki/Newton_polynomial#Main_idea)
-form: we construct the lower triangular matrix as a list of lists
+form:
+
+our coefficients are the entries of a vector $\underline{c}$ such that:
+
+\begin{equation*}
+    \begin{bmatrix}
+        1       &0           &0                      &\dots  &0                          \\
+        1       &(x_1 - x_0) &0                      &\dots  &0                          \\
+        \vdots  &\vdots      &\vdots                 &\ddots &\vdots                     \\
+        1       &(x_n - x_0) &(x_n - x_0)(x_n - x_0) &\dots  &(x_n-x_0)\dots(x_n-x_{n-1})\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        c_0 \\ c_1 \\ \vdots \\ c_n
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        y_0 \\ y_1 \\ \vdots \\ y_n
+    \end{bmatrix}
+\end{equation*}
+
+we construct the lower triangular matrix as a list of lists
 (here I rounded the values for printing).
 
 ```haskell
-newtonMatrix = map (takeWhile (/=0) . scanl (*) 1 . zipWith (flip (-)) xs . repeat) xs
+newtonMatrix = map row xs
+  where row = takeWhile (/=0)
+              . scanl (*) 1
+              . zipWith (flip (-)) xs
+              . repeat
 ```
 
 ```
@@ -170,38 +196,54 @@ newtonMatrix = map (takeWhile (/=0) . scanl (*) 1 . zipWith (flip (-)) xs . repe
  [1.0,2.5072087818176395e-2]
  [1.0,9.903113209758087e-2,7.324247883844538e-3]
  [1.0,0.2181685175319702,4.212756181137467e-2,5.0189675689328046e-3]
- [1.0,0.37651019814126646,0.13232003255213892,3.671603905143758e-2,5.81367932 ...
- [1.0,0.5661162608824418,0.30629390422737474,0.1430653277020612,4.97792579256 ...
- [1.0,0.7774790660436856,0.5849806747155206,0.3968789301591433,0.221978572120 ...
- [1.0,1.0,0.9749279121818236,0.8783796973249267,0.6867449009293668,0.42817844 ...
+ [1.0,0.37651019814126646,0.13232003255213892,3.671603905143758e- ...
+ [1.0,0.5661162608824418,0.30629390422737474,0.1430653277020612,4 ...
+ [1.0,0.7774790660436856,0.5849806747155206,0.3968789301591433,0. ...
+ [1.0,1.0,0.9749279121818236,0.8783796973249267,0.686744900929366 ...
 ...]
 ```
 
 then the coefficients to Newton's form can be obtained by solving the triangular system:
 
 ```haskell
-newtonCoefficients = zipWith fn newtonMatrix ys
-  where fn row y = (y - ((init row) `dot` newtonCoefficients)) / (last row)
+newtonCoeff = zipWith fn newtonMatrix ys
+  where fn row y = (y - ((init row) `dot` newtonCoeff)) / (last row)
         as `dot` bs = sum $ zipWith (*) as bs
 ```
 
 ```
-[0.7071067811865476,0.5498566944938549,-0.22502818791042026,-5.310916131098175 ...
+[0.7071067811865476,0.5498566944938549,-0.22502818791042026,-5.31 ...
 ```
 
-finally we can convert the coefficients from Newton's form to power series form, by
-distributing the products:
+these are not particularly comfortable to use in our case though, because the evaluation formula
+for newton's polynomial still involves the sample positions $x_0 \dots x_n$:
+
+$$
+P(x) = \sum_{i=0}^n \left(c_j \prod_{j=0}^{i-1} (x - x_j)\right)
+$$
+
+in order to get a cheaper evaluation formula, we can rewrite the equation in the
+following form and distribute the products to get the power series form of the
+polynomial:
+$$
+P(x) = c_0 + (x - x_0)(c_1 + (x - x_1)(c_2 + (x - x_2)(\dots + (x - x_{n-1})c_n\dots)))
+.$$
 
 ```haskell
 powerSeries [c] _ = [c]
-powerSeries (c:cs) (x:xs) = (c+constantTerm):rest
+powerSeries (c:cs) (x:xs) = (c+const):rest
   where psc' = powerSeries cs xs
-        (constantTerm:rest) = zipWith (-) (0:psc') $ map (x*) (psc'++[0])
+        (const:rest) = zipWith (-) (0:psc') $ map (x*) (psc'++[0])
 
-coefficients = powerSeries newtonCoefficients xs
+coefficients = powerSeries newtonCoeff xs
 ```
 
-then we can print our result, converted to fixnum:
+the result are coefficients $\tilde{c}_j$ such that
+$$
+P(x) = \sum_{j=0}^n \tilde{c}_j x^j
+.$$
+
+we can print our result, converted to fixnum:
 ```haskell
 main = mapM (print . round . (*(2^63))) coefficients
 ```
