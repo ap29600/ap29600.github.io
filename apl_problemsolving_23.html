@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>APL Problem Solving Competition 2023</title>
+  <style>
+    html {
+      font-size: 14pt;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">APL Problem Solving Competition 2023</h1>
+</header>
+<p>This year I participated in the APL Problem Solving Competition
+organized by Dyalog Ltd, I will document my thoughts about the problems
+I solved here.</p>
+<h1 id="part-1-bioinformatics">Part 1: Bioinformatics</h1>
+<h2 id="task-1">Task 1</h2>
+<p>the first problem starts off pretty tame: write a dfn that converts a
+DNA sequence to RNA, where both input and outputs are character
+arrays.</p>
+<p>The solution doesn’t need much explanation, it’s just replacing the
+<code>'T'</code>s with <code>'U'</code>s.</p>
+<pre class="apl"><code>rna  ← {&#39;U&#39;@(&#39;T&#39;∘=)⍵}</code></pre>
+<h2 id="task-2">Task 2</h2>
+<p>I had a little more fun with the next one, as I avoided writing down
+two separate look up tables by arranging my data properly:</p>
+<p>the statement calls for a dfn that returns the reverse complement of
+a DNA sequence.</p>
+<ul>
+<li>First we reverse the sequence: <code>{⌽⍵}</code></li>
+<li>Then we find look up each element in the string <code>'ACGT'</code>:
+<code>{'ACGT'⍳⌽⍵}</code></li>
+<li>The reverse of the same string dictates the replacements:
+<code>{(⊂'ACGT'⍳⌽⍵)⌷⌽'ACGT'}</code></li>
+</ul>
+<p>With a little massaging we end up with the final solution.</p>
+<pre class="apl"><code>revc ← {&#39;ACGT&#39;(⊂⍤⍳⌷⌽⍤⊣)⌽⍵}</code></pre>
+<h2 id="task-3">Task 3</h2>
+<p>This task calls for a dfn that returns the protein coded by a RNA
+sequence, terminating at the first stop codon. Setting up a lookup table
+is a logical first step:</p>
+<pre class="apl"><code>t ← ↑(&#39;UUU&#39; &#39;F&#39;)(&#39;CUU&#39; &#39;L&#39;)(&#39;AUU&#39; &#39;I&#39;)(&#39;GUU&#39; &#39;V&#39;)
+t⍪← ↑(&#39;UUC&#39; &#39;F&#39;)(&#39;CUC&#39; &#39;L&#39;)(&#39;AUC&#39; &#39;I&#39;)(&#39;GUC&#39; &#39;V&#39;)
+ ...
+t⍪← ↑(&#39;UGG&#39; &#39;W&#39;)(&#39;CGG&#39; &#39;R&#39;)(&#39;AGG&#39; &#39;R&#39;)(&#39;GGG&#39; &#39;G&#39;)
+r_cod amm ← ↓⍉t</code></pre>
+<p>The helper function <code>r_trs</code> does the heavy lifting,
+splitting the sequence in codons of 3 (<code>x←{↓(⌊3÷⍨≢⍵)3⍴⍵}r</code>),
+looking up each one (<code>y←r_cod⍳x</code>) and assinging the
+corresponding amino-acid (<code>amm⌷⍨∘⊂y</code>).</p>
+<p>the whole function can be written tacitly, and the final solution
+just applies it to it’s input and truncates the result at the first
+<code>'$'</code>.</p>
+<pre class="apl"><code>r_trs ← amm⌷⍨∘⊂r_cod⍳{↓(⌊3÷⍨≢⍵)3⍴⍵}
+prot ← {&#39;$&#39;((¯1+⍳⍨)↑⊢)r_trs⍵}</code></pre>
+<h2 id="task-4">Task 4</h2>
+<p>This was a parsing problem, of which I’ve done entirely too many
+doing Advent of Code in APL last year: it all boils down to partitioning
+and enclosing and partition-enclosing.</p>
+<p>We need to write a dfn that accepts the path to a fasta file and
+returns a list of header-sequence pairs corresponding to the DNA
+sequences stored in the file.</p>
+<p>For reference, a fasta file looks something like this:</p>
+<pre class="fasta"><code>&gt;Rosalind_99
+AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGA
+TTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG
+&gt;Rosalind_2748
+ATCAGGCTACCGTGTTTGCGGACGGGGGCTTAATCTAGCTTCTCATCTCAGCGACGTCTC
+CTTGTTGGCACAGCGGTGGCAGGAGGTCCCCGCCGAGGAGCACATCGACCTTTCGGTGTA
+...</code></pre>
+<p>The lines starting with <code>&gt;</code> are headers, and the
+following lines contain the DNA sequences.</p>
+<p>The solution is fairly pedestrian: - Read the file’s lines with
+<code>⊃⎕NGET⍵1</code> - Identify the header lines with
+<code>('&gt;'=⊃¨)</code>, and use them to partition-enclose the input. -
+For each chunk: - <code>,/1↓⍵</code> concatenates all but the header -
+<code>⊂' '(1↓(¯1+⍳⍨)↑⊢)⊃⍵</code> gets the header up to the first space
+character.</p>
+<pre class="apl"><code>readFASTA ← {{(⊂&#39; &#39;(1↓(¯1+⍳⍨)↑⊢)⊃⍵),,/1↓⍵}¨((&#39;&gt;&#39;=⊃¨)⊂⊢)⊃⎕NGET⍵1}</code></pre>
+<h2 id="task-5">Task 5</h2>
+<p>The task is to write a function that takes a fasta file, extracts the
+first (only) DNA sequence, and returns all the proteins coded by it,
+beginning with a ‘M’ amino-acid and ending with a stop codon. I
+approached the problem by writing a helper function that would turn a
+sequence of DNA into the amino-acid sequences of it’s 6 reading
+frames.</p>
+<p>Our final solution will look like this (for some definition of
+<code>crf</code> and <code>aas</code>):</p>
+<pre class="apl"><code>orf ← {crf⍤aas⊃⌽⊃readFASTA⍵}</code></pre>
+<ul>
+<li>We just defined <code>readFASTA</code>, which will give us the
+sequences.</li>
+<li><code>⊃⌽⊃</code> takes the last element in the first header-sequence
+pair.</li>
+<li><code>aas</code> will be defined later, it outputs the amino-acid
+sequences for the six reading frames of the DNA sequence.</li>
+<li><code>crf</code> will be defined later, it accepts a list of
+amino-acid sequences and outputs their subsequences that begin with
+<code>M</code> and end right before a <code>$</code>.</li>
+</ul>
+<h3 id="defining-aas">Defining <code>aas</code></h3>
+<p>Here I had the choice between the easy and intuitive solution by
+composition, or the “smart” solution that probably has no real benefit
+in this case.</p>
+<p>I obviously chose the latter.</p>
+<p>What I could have done was to extract the reading frames with the
+help of <code>revc</code>, then convert each DNA sequence into RNA with
+<code>rna</code>, finally transcribe into amino-acids with
+<code>r_trs</code>: It would have looked something like this:</p>
+<pre class="apl"><code>aas ← r_trs¨rna¨(,0 1 2∘.↓,⍥⊂∘revc⍨)</code></pre>
+<p>however, RNA and DNA are dual representations of the same data, so I
+opted to convert my lookup table into DNA representation, and write a
+function to parallel <code>r_trs</code>: this saves us the RNA
+conversion, and for big inputs it may perform better (though probably
+not by a significant amount).</p>
+<pre class="apl"><code>d_cod ← &#39;T&#39;@(&#39;U&#39;∘=)¨r_cod
+d_trs ← amm⌷⍨∘⊂d_cod⍳{↓(⌊3÷⍨≢⍵)3⍴⍵}
+aas   ← d_trs¨(,0 1 2∘.↓,⍥⊂∘revc⍨)</code></pre>
+<h3 id="retrospective">Retrospective</h3>
+<p>In hindsight, I could have been a little smarter still: observing
+that the possible codons are just 3-digit numbers in the base 4 number
+system with digits <code>'ACGT'</code>, we can leverage the decode
+primitive.</p>
+<p><code>{1+4⊥⍉¯1+'ACGT'⍳(⌊3÷⍨≢⍵)3⍴⍵}</code> can substitute the lookup
+into <code>d_cod</code>, and <code>d_trs</code> can be rewritten as
+<code>d_trs ← amm⌷⍨∘⊂{1+4⊥⍉¯1+'ACGT'⍳(⌊3÷⍨≢⍵)3⍴⍵}</code>, provided that
+<code>amm</code> contains the amino-acid sorted by the respective
+codon’s numeric value.</p>
+<p>There is no more need for the <code>d_cod</code> or
+<code>r_cod</code> tables at all! we could even parametrise the solution
+and pass either <code>'ACGT'</code> or <code>'ACGU'</code> to get both
+<code>r_trs</code> and <code>d_trs</code>. The final definition would
+have looked something like this:</p>
+<pre class="apl"><code>trs ← {amm[1+4⊥⍉¯1+⍺⍳(⌊3÷⍨≢⍵)3⍴⍵]}
+aas ← &#39;ACGT&#39;∘trs¨(,0 1 2∘.↓,⍥⊂∘revc⍨)</code></pre>
+<p>But we would still be doing duplicate work in the lookups, as well as
+giving up some opportunities for semplification: this is what it would
+look like after addressing those issues.</p>
+<pre class="apl"><code>amm ← &#39;KNKNTTTTRSRSIIMIQHQHPPPPRRRRLLLLEDEDAAAAGGGGVVVV$Y$YSSSS$CWCLFLF&#39;
+aas ← {{amm[1+4⊥⍉(⌊3÷⍨≢⍵)3⍴⍵]}¨,0 1 2∘.↓,⍥⊂∘(5-⌽)¯1+&#39;ACGT&#39;⍳⍵}</code></pre>
+<p>A nice insight comes from this layout: the last base is ignored in
+most codons, as can be observed in <code>4 4 4⍴amm</code> (many rows are
+constant).</p>
+<h3 id="defining-crf">Defining <code>crf</code></h3>
+<p>Speculation aside, to complete the task we would like - given a list
+of the amino-acids coded by the reading frames - to extract any
+subsequence of one of them, which starts with <code>'M'</code> and ends
+just before a <code>'$'</code>.</p>
+<p>Now I find myself in a bit of an embarassing situation: I have two
+solutions to this task, which diverge at this point. I definitely
+submitted the first one, but I am not sure if I ended up overriding my
+submission with the second solution; as a result, I am not sure which
+version ended up being graded. I will just describe them both and worry
+about it some other time.</p>
+<h3 id="solution-1">Solution 1</h3>
+<p>We define a 1-modifier <code>_f</code> which takes a monadic function
+and applies it to each value in <code>⍵</code>, then (expecting
+<code>⍺⍺</code> to return a list for each application) concatenates the
+results together. This is heavily inspired by rust’s
+<code>flat_map</code>.</p>
+<pre class="apl"><code>_f ← {⊃,/⍺⍺¨⍵}</code></pre>
+<p>To construct the solution:</p>
+<ul>
+<li>Partition each reading frame by <code>$</code>:
+<ul>
+<li><code>'$'∘≠⊆⊢</code> is a tacit function that splits on
+<code>$</code></li>
+<li><code>-'$'≠⊢/</code> returns <code>0</code> if the sequence ends in
+<code>$</code>, <code>¯1</code> otherwise. In the latter case, we need
+to drop the last chunk from the partitioning.</li>
+<li><code>(-'$'≠⊢/)↓'$'∘≠⊆⊢</code> puts them together to give the chunks
+that end just before <code>$</code>.</li>
+</ul></li>
+<li>Given each chunk:
+<ul>
+<li><code>'M'∘(=⊂⊢)</code> partition-encloses at the positions of
+<code>M</code>.</li>
+<li><code>,⍨\⍤⌽</code> performs a reverse-catenate-scan in reverse (what
+a mouthful) which yields the subsequences starting with <code>M</code>
+and ending at the end of the chunk.</li>
+</ul></li>
+</ul>
+<p>What’s left is to do some plumbing with <code>_f</code> and make sure
+the results are unique:</p>
+<pre class="apl"><code>crf ← {∪&#39;M&#39;∘(,⍨\⍤⌽(=⊂⊢))_f((-&#39;$&#39;≠⊢/)↓&#39;$&#39;∘≠⊆⊢)_f⍵}</code></pre>
+<h3 id="solution-2">Solution 2</h3>
+<p>The second solution is arguably a little more interesting, as it
+doesn’t directly translate from something you might write in a scalar
+language.</p>
+<ul>
+<li>Concatenate all the reading frames together, separating with
+<code>'$'</code>:<br />
+<code>s d←(,/,(⊂(+\≢¨))),∘'$'¨⍵</code>
+<ul>
+<li>to avoid losing information, we also store the positions of the
+artificially inserted <code>$</code>s, which are available as the
+cumulative sum of the lengths.</li>
+</ul></li>
+<li>Find the positions of <code>M</code> and <code>$</code> in the
+merged input with <code>'M$'(⍸=)¨⊂s</code>.</li>
+<li>Match each of the <code>M</code>s to the corresponding
+<code>$</code>’s position with binary search:
+<code>i←{↑⍺(⍵[1+⍵⍸⍺])}/ ...</code>
+<ul>
+<li>note that there is always a <code>$</code> at the end of input, so
+each <code>M</code> finds a corresponding <code>$</code>.</li>
+</ul></li>
+<li>Remove any values where the stop codon was inserted in step 1:<br />
+<code>b e←¯1+↓(~i[2;]∊d)/i</code></li>
+<li>Finally use the indices to select the relevant subsequences:
+<code>∪b↓¨e↑¨⊂s</code>.</li>
+</ul>
+<p>Putting it all together, we get the following:</p>
+<pre class="apl"><code>crf ← {
+    s d←(,/,(⊂(+\≢¨))),∘&#39;$&#39;¨⍵
+    b e←¯1+↓(~i[2;]∊d)/i←⊃{↑⍺(⍵[1+⍵⍸⍺])}/&#39;M$&#39;(⍸=)¨⊂s
+    ∪b↓¨e↑¨⊂s
+}</code></pre>
+<h3 id="retrospective-1">Retrospective</h3>
+<p>Looking back on it, the last line might have been better expressed as
+<code>∪b{s[⍺+⍳⍵-⍺]}¨e</code> to avoid materializing too many big arrays,
+but the performance implications of it depend on the implementation.</p>
+<h1 id="part-2-potpourri">Part 2: Potpourri</h1>
+<h2 id="task-1-1">Task 1</h2>
+<p>The task is to write a dfn that computes or validates a vehicle
+identification number; there are quite a few details involved, but the
+long and short of it is that characters in the VIN contribute to a total
+score according to their value and position, and the score modulo 11
+determines the correct value of the 9th digit.</p>
+<p>The solution handles a few cases:</p>
+<ul>
+<li>if the VIN contains 16 legal characters, calculate what character
+can be placed at position 9 to make a valid VIN, and do so.</li>
+<li>if the VIN contains 17 legal characters, check that the 9th
+character matches the one that we calculate from the rest of the
+VIN.</li>
+<li>otherwise, return <code>¯1</code>.</li>
+</ul>
+<pre class="apl"><code>vinc ← ⎕D,⎕A~&#39;IOQ&#39;
+vin ← {
+    ~×/⍵∊vinc: ¯1
+    16=≢⍵: (calc(⊣@9)⊢)8(↑,&#39;0&#39;,↓)⍵
+    17=≢⍵: (calc=9∘⌷)⍵
+    ¯1
+}</code></pre>
+<p>We delegate the messy part to the <code>calc</code> helper function,
+that takes a 17 character vector and returns the character that, placed
+at position 9, would make the VIN valid.</p>
+<h3 id="defining-calc">Defining <code>calc</code></h3>
+<p>I set up the tables:</p>
+<ul>
+<li><code>num</code> contains the numeric values to substitute to the
+characters</li>
+<li><code>mul</code> contains the values that digits at each position
+must be multiplied by.</li>
+</ul>
+<pre class="apl"><code>num  ← ((65∘≤×1+9|83∘≤+-∘65)+(57∘≥×-∘48))⎕ucs vinc
+mul  ← 10 0@8 9⊢17↑2↓⌽,⍨⍳10
+calc ← {(⎕D,&#39;X&#39;)⌷⍨1+11|mul+.×num⌷⍨⊂vinc⍳⍵}</code></pre>
+<p>The procedure is as follows:</p>
+<ul>
+<li>Look up each character’s value with <code>num⌷⍨⊂vinc⍳⍵</code></li>
+<li>Since the score is calculated via a sum-of-products, the choice
+falls on inner product: <code>mul +.× ...</code></li>
+<li>take the modulo and pick a digit:
+<code>(⎕D,'X')⌷⍨1+11| ...</code></li>
+</ul>
+<h3 id="retrospective-2">Retrospective</h3>
+<p>the tables defined above look very bad and are not at all insightful,
+what I should really have written is:</p>
+<pre class="apl"><code>num  ← (⍳9),(⍳8),((⍳9)~6 8),1↓⍳9
+mul  ← (⊢,10 0 9,⊢)⌽1↓⍳8</code></pre>
+<p>… or even just the raw numbers, it’s not like we’re starved for hard
+disk space.</p>
+<h2 id="task-2-1">Task 2</h2>
+<p>This task asked for a function that sorts strings representing
+software versions according to their release number. The structure of
+the input is either:</p>
+<ul>
+<li>a string in the format
+<code>"[a-zA-Z]+-[a-zA-Z]+-[0-9]+\.[0-9]+\.[0-9]+"</code></li>
+<li>a list of strings in the above format.</li>
+</ul>
+<p>The solution leverages total array ordering, and the bulk of the
+problem just boils down to parsing the numbers in the string.</p>
+<pre class="apl"><code>parts ← (-∘~⍨/&#39;.&#39;⎕vfi⊃)@3(&#39;-&#39;∘≠⊆⊢)
+sortVersions ← {1=≡⍵: ,⊂⍵ ⋄ ((⊂∘⍋parts¨)⌷⊢)⍵}</code></pre>
+<p>If the input is a flat character array, then just return it wrapped
+in a 1-element list. If it’s a list of strings, split each entry by
+<code>-</code> into the fields (<code>org</code>, <code>package</code>,
+<code>version</code>). Then parse the three numbers in
+<code>version</code> using <code>⎕vfi</code>: this suggests a nice
+extension of the problem statement: if one of the fields in
+<code>version</code> is not a number, <code>⎕vfi</code> will return a
+<code>0</code> verification bit and a <code>0</code> result: this means
+that the expression <code>result-~verification</code> returns
+<code>result</code> if valid, <code>¯1</code> otherwise.</p>
+<p>This allows us to sort versions like <code>foo-bar-10.x.0</code> in
+between <code>foo-bar-9.9.9</code> and <code>foo-bar-10.0.0</code>,
+which is kind of nice to have.</p>
+<p>With that out of the way, we have a list of entries in the
+form:<br />
+<code>org package (major minor patch)</code>.<br />
+Applying <code>⍋</code> gives us a sorting permutation, which by the
+rules of total array ordering conforms to the problem statement.</p>
+<h2 id="task-3-1">Task 3</h2>
+<p>The task is to write a dfn that, given a sorted list of coin
+denominations (positive integers) as left argument and a total amount (a
+positive integer) as right argument, returns a matrix, where each row
+contains the coefficients of a linear combination of the elements in the
+left argument which sums to the right argument. Of course, the matrix
+should be exhaustive and not contain any duplicates.</p>
+<p>Another way to look at this is that it returns the tallest matrix
+<code>res</code> that satisfies the following constraints:</p>
+<pre class="apl"><code>⍵∧.=res+.×⍺
+res≡∪res</code></pre>
+<p>The solution I submitted is a classic recursive one, with just a
+little bit of care put into the performance of it:</p>
+<pre class="apl"><code>makeChange ← {
+    0≠⍵|⍨∨/⍺: (0,≢⍺)⍴0
+    1=≢⍺: ⍪⍵÷⊃⍺
+    ⊃⍪/(((⊂¯1↓⍺)∇¨⍵-(⊃⌽⍺)×⊢),¨⊢)0,⍳⌊⍵÷⊃⌽⍺
+}</code></pre>
+<ul>
+<li><p>It is a well known mathematical fact that for a finite set <span
+class="math inline">\(A\)</span> of integers, there exists a linear
+combination in <span class="math inline">\(A\)</span> with integer
+coefficients that sums to <span class="math inline">\(n\)</span> if and
+only if <span class="math inline">\(\text{GCD}(A) | n\)</span> (where
+the GCD of a finite set is given by the pairwise GCD reduction of the
+elements in some arbitrary ordering, and <span
+class="math inline">\(|\)</span> is the divisibility symbol). This
+allows us to immediately return <code>(0,≢⍺)⍴0</code> if <code>⍵</code>
+is not divisible by <code>∨/⍺</code>, which prunes some
+branches.</p></li>
+<li><p>The second line handles the general base case, and it is only
+reached if there is exactly one trivial solution. We can avoid checking
+divisibility because the first line catches the case where
+<code>0≠⍵|⊃⍺</code>.</p></li>
+<li><p>The third line does all the recursing:</p>
+<ul>
+<li><code>0,⍳⌊⍵÷⊃⌽⍺</code> determines how many coins of the largest
+denomination can be taken away from <code>⍵</code>.</li>
+<li><code>⍵-(⊃⌽⍺)×⊢</code> calculates the amount left over from each
+operation.</li>
+<li><code>(⊂¯1↓⍺)∇¨⍵-(⊃⌽⍺)×⊢</code> recurses on each case, removing the
+largest denomination.</li>
+<li>a solution of the original problem can be formed by appending <span
+class="math inline">\(n\)</span> to a solution of the reduced problem
+that takes away <span class="math inline">\(n\)</span> coins of the
+largest denomination: therefore
+<code>(((⊂¯1↓⍺)∇¨⍵-(⊃⌽⍺)×⊢),¨⊢) ...</code> gives a list of matrices of
+the solutions</li>
+<li><code>⊃⍪/</code> concatenates the solutions together.</li>
+<li>It may look suspicious that we’re not deduplicating the lines, but
+it can be proven that every solution gotten this way is already unique:
+<ul>
+<li>the first two cases always return zero or one result, and are
+trivially unique.</li>
+<li>by inductive hypothesis, results returned by a recursive call are
+internally unique.</li>
+<li>results obtained by two different recursive calls are distinct,
+since they are joined with distinct values of <span
+class="math inline">\(n\)</span>.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="retrospective-3">Retrospective</h3>
+<p>After some thinking, I came up with a more interesting solution for
+this problem, which I didn’t submit as the competition had already
+closed: the idea is to reduce the amount of recursive calls as much as
+possible, by allowing the function to take an array right argument and
+process values of <code>⍵</code> in parallel, sharing the recursive
+subproblems between them.</p>
+<pre class="apl"><code>makeChange ← {
+    1≡≢⍺: (0=⍵|⍨⊃⍺)↑¨1 1∘⍴¨⍵
+    d←¯1+⍳¨1+⌊⍵÷i←⊢/⍺
+    u←∪∊r←⍵-i×d
+    s←(¯1↓⍺)∇u
+    ⊃⍣(0≡≢⍴⍵)⊢r{⊃⍪/s[u⍳⍺],¨⍵}¨d
+}</code></pre>
+</body>
+</html>
