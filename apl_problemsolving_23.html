@@ -574,5 +574,118 @@ was a scalar, so that the result is conformant with the problem
 statement.</li>
 </ul></li>
 </ul>
+<h2 id="task-4-1">Task 4</h2>
+<p>The task is to write a procedure <code>partition</code> that returns
+sliding windows of the right argument, with the size, strides and
+starting position given by the left argument.</p>
+<pre class="apl"><code>partition ← {
+    1 0∊⍨≡⍺: (⊂,⍺)∇⍵
+    (≢⍴⍵)&lt;≢⊃⍺: 0↑⊂(⊃⍺)⍴⍬
+    s m o←(≢⍴⍵)(⊢,⍨1⍴⍨-∘≢)¨3↑⍺,⍬⍬
+    ,⊂⍤((⊃⍺)∘⍴)⍤(≢s)⊢⍵[(¯1+⍳s)∘.+⍨(⊂o)+(⊂m)×¯1+⍳0⌈1+⌊m÷⍨(⍴⍵)-o+s-1]
+}</code></pre>
+<p>We start by parsing the left argument, case by case.</p>
+<ul>
+<li>If <code>⍺</code> is simple, we enclose it (it will be used to
+construct <code>s</code> later): <code>(⊂,⍺)∇⍵</code></li>
+<li>If <code>⍺</code> is nested:
+<ul>
+<li>If <code>≢⊃⍺</code> is greater than the rank of <code>⍵</code>, we
+are being asked for a window that can’t be found in the array, and we
+return the empty list, however we also set the fill element to be the
+desired shape, to maintain the invariant
+<code>(⊃⍺)≡⍴⊃⍺partition⍵</code>.</li>
+<li>The rest of our code assumes input in the format <code>s m o</code>
+where:
+<ul>
+<li><code>s</code> designates the shape of the windows.</li>
+<li><code>m</code> designates the strides of the windows along each
+dimension.</li>
+<li><code>o</code> designates the origin of the first window.</li>
+</ul>
+Each of these may be underspecified (that is, given as a list that is
+shorter than the rank of <code>⍵</code>, or omitted completely. in this
+case, the implied value for the omitted leading dimensions is
+<code>1</code>. To make sure our arrays are in this format:
+<ul>
+<li><code>3↑⍺,⍬⍬</code>: Pad <code>⍺</code> with instances of
+<code>⍬</code> up to 3 elements:</li>
+<li><code>(≢⍴⍵)(⊢,⍨1⍴⍨-∘≢)¨ ...</code>: Prepend <code>1</code>s to each
+element, up to <code>≢⍴⍵</code>.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Then, our strategy is to generate indices into <code>⍵</code> to
+build up the resulting windows:</p>
+<ul>
+<li><code>(⍴⍵)-o+s-1</code>: The counts of the distinct (non-trivial)
+origins for a window of shape <code>s</code> along each axis: each
+window has to start at a position <code>pos</code> such that:
+<code>∧/ (o ≤ pos) , pos ≤ (⍴⍵)-s</code>. If no windows fit along an
+axis, the corresponding component is negative.</li>
+<li><code>0⌈1+⌊m÷⍨ ...</code>: Divide by the strides to get the counts
+of windows actually in the result: clamp negative components up to
+0.</li>
+<li><code>(⊂o)+(⊂m)×¯1+⍳ ...</code>: Generate the origin of each window
+as the sum of the base position <code>o</code> and an offset.</li>
+<li><code>(¯1+⍳s)∘.+⍨ ...</code>: Sum each window’s origin with each
+offset in the shape of the window with outer product. the commute is
+used to make sure the rank <code>≢s</code> cells of the result
+correspond to windows.</li>
+<li><code>⍵[ ... ]</code>: Index into <code>⍵</code> with the generated
+indices.</li>
+<li><code>⊂⍤((⊃⍺)∘⍴)⍤(≢s) ...</code>: Pick the cells of rank
+<code>≢s</code> (each corresponding to a window) and enclose them after
+giving them the requested shape, finally unravel the result.</li>
+</ul>
+<h3 id="retrospective-4">Retrospective:</h3>
+<p>I didn’t feel satisfied with this solution, mainly because it uses
+way too many enclosed arrays as indices. Here it is, rewritten to
+convert to scalar indices in ravel order. I took the opportunity to
+modify a couple other things I wasn’t happy with:</p>
+<ul>
+<li>Take <code>⎕IO</code> into account instead of assuming
+<code>⎕IO←1</code>.</li>
+<li>Use <code>⊆</code> to conditionally enclose <code>⍺</code> instead
+of using recursion.</li>
+</ul>
+<pre class="apl"><code>I ← {⍵⊤⎕IO-⍨⍳×/⍵}
+partition ← {
+    (≢⍴⍵)&lt;≢⊃a←⊆⍺: 0↑⊂(⊃a)⍴⍬
+    s m o←(-r)↑¨(⊂(r←≢sw←⍴⍵)⍴1),¨3↑a,⍬⍬
+    or←sw⊥m×⍤0 1I 0⌈1+⌊m÷⍨sw-s+o-⎕IO
+    ⊂⍤¯1⊢((≢or),⊃a)⍴(⊂⎕IO+(or+sw⊥o-⎕IO)∘.+sw⊥I s)⌷,⍵
+}</code></pre>
+<p>The result is a little longer, but arguably simpler:</p>
+<ul>
+<li><code>0⌈1+⌊m÷⍨sw-s+o-⎕IO</code> is exactly as before, but accounts
+for <code>⎕IO</code>.</li>
+<li><code>I ← {⍵⊤⎕IO-⍨⍳×/⍵}</code> defines a function equivalent to
+<code>{⍉⎕IO-⍨↑,⍳⍵}</code> but doesn’t use nested arrays. That is, it
+generates a matrix whose columns are the 0-based indices into an array
+of shape <code>⍵</code>, given in ravel order.</li>
+<li><code>or←sw⊥m×⍤0 1I ...</code> generates the 0-based indices into
+<code>,⍵</code> of the origins of the windows. (the pattern
+<code>sw⊥ ...</code> is used to convert a matrix whose columns are
+0-based indices (or offsets) into <code>⍵</code> to a list of
+corresponding indices (or offsets) into <code>,⍵</code>)</li>
+<li><code>sw⊥I s</code> gives the offset in <code>,⍵</code> of each
+element in a window from the origin of the same window.</li>
+<li><code>(⊂⎕IO+(or+sw⊥o-⎕IO)∘.+sw⊥I s)⌷,⍵</code> builds up windows of
+indices and uses them to pick from <code>,⍵</code></li>
+<li><code>⊂⍤¯1⊢((≢or),⊃a)⍴ ...</code> adjusts the shape of the windows
+and encloses the results.</li>
+</ul>
+<p>If nothing else, this shows my issue with <code>⎕IO</code>: as soon
+as you start doing arithmetic on indices it gets in the way. If
+<code>⎕IO</code> was always <code>0</code>, the solution could be
+simplified to:</p>
+<pre class="apl"><code>I ← {⍵⊤⍳×/⍵}
+partition ← {
+    (≢⍴⍵)&lt;≢⊃a←⊆⍺: 0↑⊂(⊃a)⍴⍬
+    s m o←(-r)↑¨(⊂(r←≢sw←⍴⍵)⍴1),¨3↑a,⍬⍬
+    or←sw⊥m×⍤0 1I 0⌈1+⌊m÷⍨sw-s+o
+    ⊂⍤¯1⊢((≢or),⊃a)⍴(⊂(or+sw⊥o)∘.+sw⊥I s)⌷,⍵
+}</code></pre>
 </body>
 </html>
