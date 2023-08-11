@@ -687,5 +687,9 @@ partition ← {
     or←sw⊥m×⍤0 1I 0⌈1+⌊m÷⍨sw-s+o
     ⊂⍤¯1⊢((≢or),⊃a)⍴(⊂(or+sw⊥o)∘.+sw⊥I s)⌷,⍵
 }</code></pre>
+<p>It also exemplifies how keeping the data representation flat can
+simplify the reasoning, as well as improving the performance: the new
+version is about 28x faster than the old one on
+<code>3 3 3 partition 25 25 25⍴⎕A</code>.</p>
 </body>
 </html>
