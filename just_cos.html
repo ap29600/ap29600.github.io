@@ -268,12 +268,11 @@ class="math inline">\((\pi) \ne 0\)</span>, because the argument is
 rounded before being passed to the function. If we use turns, though,
 more of the meaningful angles are exactly representable:
 <code>tsin</code><span class="math inline">\((\frac 1 2) = 0\)</span>;
-in fact, <span class="math inline">\(\forall n \in \mathbb{N},\)</span>
-(ok, more like <span class="math inline">\(\forall n \in
-\mathbb{N}\cap[-2^{54}+1,2^{54}-1]\)</span>, you get the point.)
+in fact, <span class="math inline">\(\forall n \in \mathbb{N}\)</span>,
 <code>tsin</code><span class="math inline">\((\frac n 2) = 0\)</span>
 and <code>tcos</code><span class="math inline">\((\frac n 2) = \pm
-1\)</span>, always, with exactly zero error.</p>
+1\)</span>, always, with exactly zero error, as at worst the input will
+be rounded towards the nearest integer.</p>
 <p>Moreover (and this is completely anecdotal) the most common operation
 that a user does before feeding an exact value to <code>sin</code> or
 <code>cos</code> is likely to multiply it by some integer multiple of
@@ -292,8 +291,8 @@ the range <span class="math inline">\([-\frac\pi 4, \frac\pi 4)\)</span>
 function on the corresponding range <span class="math inline">\([-\frac
 1 8, \frac 1 8)\)</span>). Then the <span
 class="math inline">\(\text{tcos}\)</span> function can be calculated by
-multiplying the angle by 4: then the integer part mod 4 tells us what
-function to apply:</p>
+multiplying the angle by 4, and the integer part mod 4 tells us what
+function to apply on the fractional part:</p>
 <ul>
 <li>if <span class="math inline">\(\left\lfloor4x\right\rceil \equiv 0
 \pmod{4}\)</span>, calculate <span
@@ -682,7 +681,7 @@ is negligible.</p>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3557527</span><span class="op">,</span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">};</span></span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> x2  <span class="op">=</span> <span class="op">((</span>int128_t<span class="op">)</span>t <span class="op">*</span> <span class="op">(</span>int128_t<span class="op">)</span>t <span class="op">-</span> <span class="op">(</span>t<span class="op">==</span>INT64_MIN<span class="op">))</span> <span class="op">&gt;&gt;</span> <span class="dv">62</span><span class="op">;</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> x2  <span class="op">=</span> <span class="op">(((</span>int128_t<span class="op">)</span>t <span class="op">*</span> <span class="op">(</span>int128_t<span class="op">)</span>t<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">62</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span>t<span class="op">==</span>INT64_MIN<span class="op">);</span></span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> x4  <span class="op">=</span> <span class="op">((</span>uint128_t<span class="op">)</span>x2  <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> x6  <span class="op">=</span> <span class="op">((</span>uint128_t<span class="op">)</span>x4  <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> x8  <span class="op">=</span> <span class="op">((</span>uint128_t<span class="op">)</span>x6  <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
@@ -701,5 +700,68 @@ is negligible.</p>
 <span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res<span class="op">;</span></span>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="reducing-computation-cost">Reducing computation cost</h2>
+<p>Now that we have a formula to evaluate, we need to worry about doing
+so efficiently. currently, we are calculating all powers of
+<code>t</code> up front, and then summing them all together for a total
+of 14 multiplications and 7 additions, but there is a trick to
+evaluating long polynomials with less operations. We consider the
+evaluation formula we settled for (<span
+class="math inline">\(\bar{c}_j\)</span> will be the integer
+coefficients we chose) and factor out <span
+class="math inline">\(x_2\)</span> in a few places (remember that <span
+class="math inline">\(x_{2n+2} = x_{2n} \cdot x_2 \cdot
+2^{-64}\)</span>). <span class="math display">\[\begin{align*}
+    \text{icos}(t) = 2^{63}
+    &amp;- \frac{x_2    \cdot \bar{c}_0}{2^{64}}
+     + \frac{x_4    \cdot \bar{c}_1}{2^{64}}
+     - \frac{x_6    \cdot \bar{c}_2}{2^{64}}
+     + \frac{x_8    \cdot \bar{c}_3}{2^{64}}
+     - \frac{x_{10} \cdot \bar{c}_4}{2^{64}}
+     + \frac{x_{12} \cdot \bar{c}_5}{2^{64}}
+     - \frac{x_{14} \cdot \bar{c}_6}{2^{64}}\\
+    = 2^{63} &amp;- \frac{x_2}{2^{64}}\left(
+        \bar{c}_0 - \frac{x_2}{2^{64}}\left(
+            \bar{c}_1 - \frac{x_2}{2^{64}}\left(
+                \bar{c}_2 - \frac{x_2}{2^{64}}\left(
+                    \bar{c}_3 - \frac{x_2}{2^{64}}\left(
+                        \bar{c}_4 - \frac{x_2}{2^{64}}\left(
+                            \bar{c}_5 - \frac{x_2}{2^{64}}\bar{c}_6
+                        \right)
+                    \right)
+                \right)
+            \right)
+        \right)
+    \right)
+\end{align*}\]</span></p>
+<p>This way we only need to perform 8 multiplications (one is hidden in
+<span class="math inline">\(x_2\)</span>’s definition) and 7 additions.
+In practice we implement this in the following way:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">uint64_t</span> icos<span class="op">(</span><span class="dt">int64_t</span> t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">static</span> <span class="dt">const</span> <span class="dt">uint64_t</span> c<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2844719788994575527</span><span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="dv">146230515361076815</span><span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3006744454122068</span><span class="op">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="dv">33119841825907</span><span class="op">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="dv">226999764641</span><span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1060732338</span><span class="op">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="dv">3557527</span><span class="op">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">};</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> x2 <span class="op">=</span> <span class="op">(((</span>int128_t<span class="op">)</span>t <span class="op">*</span> <span class="op">(</span>int128_t<span class="op">)</span>t<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">62</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span>t<span class="op">==</span>INT64_MIN<span class="op">);</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uint64_t</span> res <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">6</span><span class="op">])</span>       <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">-</span> res<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">4</span><span class="op">]</span> <span class="op">-</span> res<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">-</span> res<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">-</span> res<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">-</span> res<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="op">(</span>uint128_t<span class="op">)</span>x2 <span class="op">*</span> <span class="op">(</span>uint128_t<span class="op">)(</span>c<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">-</span> res<span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="dv">64</span><span class="op">;</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>  <span class="op">(</span><span class="dv">1</span><span class="bu">ULL</span> <span class="op">&lt;&lt;</span> <span class="dv">63</span><span class="op">)</span> <span class="op">-</span> res<span class="op">;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Doing this changes the digit in last place for some of the values,
+but this formula should be more accurate overall, so we’re not too
+worried about that. We will do some better error analysis later.</p>
 </body>
 </html>

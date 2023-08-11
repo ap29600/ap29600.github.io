@@ -1,5 +1,4 @@
 ---
-geometry: margin=1in
 title: Just `cos`
 subtitle: lessons learned implementing trig functions without floating point numbers
 fontsize: 14pt
@@ -12,7 +11,7 @@ fontsize: 14pt
 - `sin` and `cos`   are the `C` functions that calculate $\sin$ and $\cos$ on
   `double`s
 - `tsin` and `tcos` are the `C` functions that calculate $\text{tsin}$ and
-  $\text{tcos}$ on `double`s 
+  $\text{tcos}$ on `double`s
 - `isin` and `icos` are the `C` functions that calculate $\text{tsin}$ and
   $\text{tcos}$ on fixed point numbers
 
@@ -23,9 +22,9 @@ of a power of 2. This means that, in floating point numbers of __any__
 precision, `sin`$(\pi) \ne 0$, because the argument is rounded before being
 passed to the function. If we use turns, though, more of the meaningful angles
 are exactly representable: `tsin`$(\frac 1 2) = 0$; in fact, $\forall n \in
-\mathbb{N},$ (ok, more like $\forall n \in \mathbb{N}\cap[-2^{54}+1,2^{54}-1]$, you
-get the point.) `tsin`$(\frac n 2) = 0$ and `tcos`$(\frac n 2) = \pm 1$,
-always, with exactly zero error.
+\mathbb{N}$, `tsin`$(\frac n 2) = 0$ and `tcos`$(\frac n 2) = \pm 1$,
+always, with exactly zero error, as at worst the input will be rounded towards the
+nearest integer.
 
 Moreover (and this is completely anecdotal) the most common operation that a
 user does before feeding an exact value to `sin` or `cos` is likely to multiply
@@ -41,8 +40,8 @@ some symmetry.
 For our purposes, we will first focus on finding an interpolating polynomial
 for the $\cos$ function on the range $[-\frac\pi 4, \frac\pi 4)$ (or rather for
 the $\text{tcos}$ function on the corresponding range $[-\frac 1 8, \frac 1
-8)$). Then the $\text{tcos}$ function can be calculated by multiplying the angle by 4:
-then the integer part mod 4 tells us what function to apply:
+8)$). Then the $\text{tcos}$ function can be calculated by multiplying the angle by 4,
+and the integer part mod 4 tells us what function to apply on the fractional part:
 
 - if $\left\lfloor4x\right\rceil \equiv 0 \pmod{4}$, calculate $+$`icos`$\left(2^{63} \cdot 8\left(x - \frac{\left\lfloor4x\right\rceil}{4}\right)\right)$
 - if $\left\lfloor4x\right\rceil \equiv 1 \pmod{4}$, calculate $-$`isin`$\left(2^{63} \cdot 8\left(x - \frac{\left\lfloor4x\right\rceil}{4}\right)\right)$
@@ -383,7 +382,7 @@ uint64_t icos(int64_t t) {
 		3557527,
 	};
 
-	uint64_t x2  = ((int128_t)t * (int128_t)t - (t==INT64_MIN)) >> 62;
+	uint64_t x2  = (((int128_t)t * (int128_t)t) >> 62) - (t==INT64_MIN);
 	uint64_t x4  = ((uint128_t)x2  * (uint128_t)x2) >> 64;
 	uint64_t x6  = ((uint128_t)x4  * (uint128_t)x2) >> 64;
 	uint64_t x8  = ((uint128_t)x6  * (uint128_t)x2) >> 64;
@@ -403,3 +402,68 @@ uint64_t icos(int64_t t) {
 	return res;
 }
 ```
+
+## Reducing computation cost
+Now that we have a formula to evaluate, we need to worry about doing so efficiently.
+currently, we are calculating all powers of `t` up front, and then summing them all
+together for a total of 14 multiplications and 7 additions, but there
+is a trick to evaluating long polynomials with less operations.
+We consider the evaluation formula we settled for ($\bar{c}_j$ will be the integer
+coefficients we chose) and factor out $x_2$ in a few places
+(remember that $x_{2n+2} = x_{2n} \cdot x_2 \cdot 2^{-64}$).
+\begin{align*}
+    \text{icos}(t) = 2^{63}
+    &- \frac{x_2    \cdot \bar{c}_0}{2^{64}}
+     + \frac{x_4    \cdot \bar{c}_1}{2^{64}}
+     - \frac{x_6    \cdot \bar{c}_2}{2^{64}}
+     + \frac{x_8    \cdot \bar{c}_3}{2^{64}}
+     - \frac{x_{10} \cdot \bar{c}_4}{2^{64}}
+     + \frac{x_{12} \cdot \bar{c}_5}{2^{64}}
+     - \frac{x_{14} \cdot \bar{c}_6}{2^{64}}\\
+    = 2^{63} &- \frac{x_2}{2^{64}}\left(
+        \bar{c}_0 - \frac{x_2}{2^{64}}\left(
+            \bar{c}_1 - \frac{x_2}{2^{64}}\left(
+                \bar{c}_2 - \frac{x_2}{2^{64}}\left(
+                    \bar{c}_3 - \frac{x_2}{2^{64}}\left(
+                        \bar{c}_4 - \frac{x_2}{2^{64}}\left(
+                            \bar{c}_5 - \frac{x_2}{2^{64}}\bar{c}_6
+                        \right)
+                    \right)
+                \right)
+            \right)
+        \right)
+    \right)
+\end{align*}
+
+This way we only need to perform 8 multiplications (one is hidden in $x_2$'s definition)
+and 7 additions. In practice we implement this in the following way:
+
+```c
+uint64_t icos(int64_t t) {
+	static const uint64_t c[] = {
+		2844719788994575527,
+		146230515361076815,
+		3006744454122068,
+		33119841825907,
+		226999764641,
+		1060732338,
+		3557527,
+	};
+
+	uint64_t x2 = (((int128_t)t * (int128_t)t) >> 62) - (t==INT64_MIN);
+
+	uint64_t res = 0;
+	res = (uint128_t)x2 * (uint128_t)(c[6])       >> 64;
+	res = (uint128_t)x2 * (uint128_t)(c[5] - res) >> 64;
+	res = (uint128_t)x2 * (uint128_t)(c[4] - res) >> 64;
+	res = (uint128_t)x2 * (uint128_t)(c[3] - res) >> 64;
+	res = (uint128_t)x2 * (uint128_t)(c[2] - res) >> 64;
+	res = (uint128_t)x2 * (uint128_t)(c[1] - res) >> 64;
+	res = (uint128_t)x2 * (uint128_t)(c[0] - res) >> 64;
+	return  (1ULL << 63) - res;
+}
+```
+
+Doing this changes the digit in last place for some of the values, but
+this formula should be more accurate overall, so we're not too worried
+about that. We will do some better error analysis later.
