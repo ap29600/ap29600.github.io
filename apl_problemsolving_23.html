@@ -932,9 +932,9 @@ placed at position 9, would make the VIN valid.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>num  ← ((65∘≤×1+9|83∘≤+-∘65)+(57∘≥×-∘48))⎕ucs vinc
-mul  ← 10 0@8 9⊢17↑2↓⌽,⍨⍳10
-calc ← {(⎕D,'X')⌷⍨1+11|mul+.×num⌷⍨⊂vinc⍳⍵}</pre>
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-nv">num</span><span class="tok-w">  </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-p">((</span><span class="tok-m">65</span><span class="tok-na">∘</span><span class="tok-o">≤×</span><span class="tok-m">1</span><span class="tok-o">+</span><span class="tok-m">9</span><span class="tok-o">|</span><span class="tok-m">83</span><span class="tok-na">∘</span><span class="tok-o">≤+-</span><span class="tok-na">∘</span><span class="tok-m">65</span><span class="tok-p">)</span><span class="tok-o">+</span><span class="tok-p">(</span><span class="tok-m">57</span><span class="tok-na">∘</span><span class="tok-o">≥×-</span><span class="tok-na">∘</span><span class="tok-m">48</span><span class="tok-p">))</span><span class="tok-nf">⎕ucs</span><span class="tok-w"> </span><span class="tok-nv">vinc</span>
+<span class="tok-nv">mul</span><span class="tok-w">  </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-m">10</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-na">@</span><span class="tok-m">8</span><span class="tok-w"> </span><span class="tok-m">9</span><span class="tok-o">⊢</span><span class="tok-m">17</span><span class="tok-o">↑</span><span class="tok-m">2</span><span class="tok-o">↓⌽,</span><span class="tok-na">⍨</span><span class="tok-o">⍳</span><span class="tok-m">10</span>
+<span class="tok-nv">calc</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-kt">{</span><span class="tok-p">(</span><span class="tok-nf">⎕D</span><span class="tok-o">,</span><span class="tok-s1">&#39;X&#39;</span><span class="tok-p">)</span><span class="tok-o">⌷</span><span class="tok-na">⍨</span><span class="tok-m">1</span><span class="tok-o">+</span><span class="tok-m">11</span><span class="tok-o">|</span><span class="tok-nv">mul</span><span class="tok-o">+</span><span class="tok-na">.</span><span class="tok-o">×</span><span class="tok-nv">num</span><span class="tok-o">⌷</span><span class="tok-na">⍨</span><span class="tok-o">⊂</span><span class="tok-nv">vinc</span><span class="tok-o">⍳</span><span class="tok-bp">⍵</span><span class="tok-kt">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1311,7 +1311,7 @@ the new version is about 28x faster than the old one on <code>3 3 3 partition 25
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-01 20:25:37 +0200
+Last updated 2024-09-01 20:30:14 +0200
 </div>
 </div>
 <script type="text/x-mathjax-config">

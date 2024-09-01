@@ -279,7 +279,7 @@ I set up the tables:
 * num contains the numeric values to substitute to the characters
 * mul contains the values that digits at each position must be multiplied by.
 
-[sources,apl]
+[source,apl]
 ----
 num  ← ((65∘≤×1+9|83∘≤+-∘65)+(57∘≥×-∘48))⎕ucs vinc
 mul  ← 10 0@8 9⊢17↑2↓⌽,⍨⍳10
