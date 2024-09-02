@@ -3,6 +3,10 @@
 :source-highlighter: pygments
 :author: Andrea Piseri
 :email: andrea.piseri@gmail.com
+:website: https://ap29600.github.io[CRC]
+:toc: preamble
+:stylesheet: stylesheet.css
+:tocdepth: 4
 :revdate: 06/08/2023
 
 
@@ -90,8 +94,8 @@ The solution is fairly pedestrian:
 * Read the file's lines with `⊃⎕NGET⍵1`
 * Identify the header lines with (``'>'=⊃¨``), and use them to partition-enclose the input.
 * For each chunk:
-	* `,/1↓⍵` concatenates all but the header
-        * ``⊂' '(1↓(¯1+⍳⍨)↑⊢)⊃⍵`` gets the header up to the first space character.
+** `,/1↓⍵` concatenates all but the header
+** ``⊂' '(1↓(¯1+⍳⍨)↑⊢)⊃⍵`` gets the header up to the first space character.
 
 [source,apl]
 ----
@@ -197,13 +201,13 @@ _f ← {⊃,/⍺⍺¨⍵}
 To construct the solution:
 
 * Partition each reading frame by `$`:
-	* `'$'∘≠⊆⊢` is a tacit function that splits on `$`
-	* `-'$'≠⊢/` returns 0 if the sequence ends in `$`, `¯1` otherwise. In the latter case,
+** `'$'∘≠⊆⊢` is a tacit function that splits on `$`
+** `-'$'≠⊢/` returns 0 if the sequence ends in `$`, `¯1` otherwise. In the latter case,
 		we need to drop the last chunk from the partitioning.
-	* `(-'$'≠⊢/)↓'$'∘≠⊆⊢` puts them together to give the chunks that end just before `$`.
+** `(-'$'≠⊢/)↓'$'∘≠⊆⊢` puts them together to give the chunks that end just before `$`.
 * Given each chunk:
-	* `'M'∘(=⊂⊢)` partition-encloses at the positions of M.
-	* `,⍨\⍤⌽` performs a reverse-catenate-scan in reverse (what a mouthful) which yields 
+** `'M'∘(=⊂⊢)` partition-encloses at the positions of M.
+** `,⍨\⍤⌽` performs a reverse-catenate-scan in reverse (what a mouthful) which yields 
 		the subsequences starting with M and ending at the end of the chunk.
 
 What’s left is to do some plumbing with `_f` and make sure the results are unique:
@@ -220,11 +224,11 @@ something you might write in a scalar language.
 
 * Concatenate all the reading frames together, separating with `'$'`:
 * `s d←(,/,(⊂(+\≢¨))),∘'$'¨⍵`
-	* to avoid losing information, we also store the positions of the artificially inserted ``$``s,
+** to avoid losing information, we also store the positions of the artificially inserted ``$``s,
 		which are available as the cumulative sum of the lengths.
 * Find the positions of `M` and `$` in the merged input with `'M$'(⍸=)¨⊂s`.
 * Match each of the Ms to the corresponding ``$``'s position with binary search: `i←{↑⍺(⍵[1+⍵⍸⍺])}/ ...`
-	* note that there is always a `$` at the end of input, so each `M` finds a corresponding `$`.
+** note that there is always a `$` at the end of input, so each `M` finds a corresponding `$`.
 * Remove any values where the stop codon was inserted in step 1:
 	`b e←¯1+↓(~i[2;]∊d)/i`
 * Finally use the indices to select the relevant subsequences: `∪b↓¨e↑¨⊂s`.
@@ -373,11 +377,12 @@ The third line does all the recursing:
 * `(⊂¯1↓⍺)∇¨⍵-(⊃⌽⍺)×⊢` recurses on each case, removing the largest denomination.
 * a solution of the original problem can be formed by appending stem:[n] to a solution of the reduced problem 
 	that takes away stem:[n] coins of the largest denomination: therefore
-	* `(((⊂¯1↓⍺)∇¨⍵-(⊃⌽⍺)×⊢),¨⊢) ...` gives a list of matrices of the solutions
-	* `⊃⍪/` concatenates the solutions together.
+** `(((⊂¯1↓⍺)∇¨⍵-(⊃⌽⍺)×⊢),¨⊢) ...` gives a list of matrices of the solutions
+** `⊃⍪/` concatenates the solutions together.
 
 It may look suspicious that we’re not deduplicating the lines, but it can be proven that every solution
 gotten this way is already unique:
+
 * the first two cases always return zero or one result, and are trivially unique.
 * by inductive hypothesis, results returned by a recursive call are internally unique.
 * results obtained by two different recursive calls are distinct, since they are joined with distinct values of stem:[n].
@@ -402,14 +407,14 @@ makeChange ← {
 
 * In the base case, if `⍺` only has one element, we provide the trivial solution to each element in `⍵` as a `0 1` or `1 1` matrix.
 * otherwise, we generate a list of unique subproblems, recurse, then use them to solve the original problem.
-	* `d←0,¨⍳¨⌊⍵÷i←⊢/⍺` generates a list of lists, each containing the amounts of coins of the biggest denomination that
+** `d←0,¨⍳¨⌊⍵÷i←⊢/⍺` generates a list of lists, each containing the amounts of coins of the biggest denomination that
 		can be taken from each element of `⍵`.
-	* `r←⍵-i×d` generates the nested list of amounts left over from each operation
-	* `u←∪∊r` flattens and deduplicates this list, giving the list of subproblems to recurse on.
-	* `s←(¯1↓⍺)∇u` gives the list of solutions to each subproblem
-	* `{⊃⍪/s[u⍳⍺],¨⍵}` looks up each element of `⍺` in the list of subproblems and gives the corresponding solution,
+** `r←⍵-i×d` generates the nested list of amounts left over from each operation
+** `u←∪∊r` flattens and deduplicates this list, giving the list of subproblems to recurse on.
+** `s←(¯1↓⍺)∇u` gives the list of solutions to each subproblem
+** `{⊃⍪/s[u⍳⍺],¨⍵}` looks up each element of `⍺` in the list of subproblems and gives the corresponding solution,
 		then joins it to `⍵` and concatenates the results.
-	* `⊃⍣(0≡≢⍴⍵)` discloses the result if the right argument was a scalar, so that the result is conformant with the 
+** `⊃⍣(0≡≢⍴⍵)` discloses the result if the right argument was a scalar, so that the result is conformant with the 
 		problem statement.
 
 === Task 4
@@ -431,18 +436,18 @@ We start by parsing the left argument, case by case.
 
 * If `⍺` is simple, we enclose it (it will be used to construct `s` later): `(⊂,⍺)∇⍵`
 * If `⍺` is nested:
-	* If `≢⊃⍺` is greater than the rank of `⍵`, we are being asked for a window that can’t be found in the array, 
+** If `≢⊃⍺` is greater than the rank of `⍵`, we are being asked for a window that can’t be found in the array, 
 		and we return the empty list, however we also set the fill element to be the desired shape,
 		to maintain the invariant `(⊃⍺)≡⍴⊃⍺partition⍵`.
-	* The rest of our code assumes input in the format `s m o` where:
-		* `s` designates the shape of the windows.
-		* `m` designates the strides of the windows along each dimension.
-		* `o` designates the origin of the first window.
+** The rest of our code assumes input in the format `s m o` where:
+*** `s` designates the shape of the windows.
+*** `m` designates the strides of the windows along each dimension.
+*** `o` designates the origin of the first window.
         	Each of these may be underspecified (that is, given as a list that is shorter than the rank of `⍵`,
 		or omitted completely. in this case, the implied value for the omitted leading dimensions is 1.
 		To make sure our arrays are in this format:
-            	* `3↑⍺,⍬⍬`: Pad `⍺` with instances of `⍬` up to 3 elements:
-            	* `(≢⍴⍵)(⊢,⍨1⍴⍨-∘≢)¨ ...`: Prepend 1s to each element, up to `≢⍴⍵`.
+**** `3↑⍺,⍬⍬`: Pad `⍺` with instances of `⍬` up to 3 elements:
+**** `(≢⍴⍵)(⊢,⍨1⍴⍨-∘≢)¨ ...`: Prepend 1s to each element, up to `≢⍴⍵`.
 
 Then, our strategy is to generate indices into ⍵ to build up the resulting windows:
 

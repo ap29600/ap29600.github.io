@@ -3,6 +3,7 @@
 :author: Andrea Piseri
 :email: andrea.piseri@gmail.com
 :stem: latexmath
+:stylesheet: stylesheet.css
 :revdate: 20/06/2023
 
 Lessons learned implementing trig functions without floating point numbers
@@ -10,8 +11,8 @@ Lessons learned implementing trig functions without floating point numbers
 == Notation:
 * stem:[\sin] and stem:[\cos] are mathematical functions taking the argument in radians
 * stem:[\text{tsin}] and stem:[\text{tcos}] are mathematical functions taking the argument in turns
-* `sin` and `cos`   are the `C` functions that calculate stem:[\sin] and stem:[\cos] on `double`s
-* `tsin` and `tcos` are the `C` functions that calculate stem:[\text{tsin}] and stem:[\text{tcos}] on `double`s
+* `sin` and `cos`   are the `C` functions that calculate stem:[\sin] and stem:[\cos] on ``double``s
+* `tsin` and `tcos` are the `C` functions that calculate stem:[\text{tsin}] and stem:[\text{tcos}] on ``double``s
 * `isin` and `icos` are the `C` functions that calculate stem:[\text{tsin}] and stem:[\text{tcos}] on fixed point numbers
 
 == Choosing turns over radians

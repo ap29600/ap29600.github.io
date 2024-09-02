@@ -1,0 +1,8 @@
+= Cozy Recreational Computing
+:author: Andrea Piseri
+:stylesheet: stylesheet.css
+
+== Articles:
+
+* link:just_cos.html[Just `cos`]: lessons learned implementing trig functions without floating point numbers
+* link:apl_problemsolving_23.html[APL Problem Solving Competition 2023]: Reflections and explanations of my solutions to the competition.
