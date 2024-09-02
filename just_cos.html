@@ -713,7 +713,7 @@ higher word of a merged 128-bit register, which on x86_64 is very cheap (good ol
 </div>
 <div class="paragraph">
 <p>Here we&#8217;re exploiting the fact that modern compilers offer support for the
-types <code><em>int128</code> and <code>unsigned </em>int128</code>, which we don&#8217;t really use fully: we
+types <code>__int128</code> and <code>unsigned __int128</code>, which we don&#8217;t really use fully: we
 only care about the upper half of the result which on x86_64 gets stored in
 <code>rdx</code> after a multiplication.</p>
 </div>
@@ -849,7 +849,7 @@ so we&#8217;re not too worried about that. We will do some better error analysis
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-02 23:51:04 +0200
+Last updated 2024-09-02 23:55:47 +0200
 </div>
 </div>
 <script type="text/x-mathjax-config">

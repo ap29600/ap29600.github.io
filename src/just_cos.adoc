@@ -401,7 +401,7 @@ uint64_t icos(int64_t t) {
 ----
 
 Here we're exploiting the fact that modern compilers offer support for the
-types ``__int128`` and ``unsigned __int128``, which we don't really use fully: we
+types `pass:[__int128]` and `pass:[unsigned __int128]`, which we don't really use fully: we
 only care about the upper half of the result which on x86_64 gets stored in
 `rdx` after a multiplication.
 
