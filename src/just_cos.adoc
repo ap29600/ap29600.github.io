@@ -2,6 +2,8 @@
 :source-highlighter: pygments
 :author: Andrea Piseri
 :email: andrea.piseri@gmail.com
+:docinfo: shared-header
+:website-home: index.html
 :stem: latexmath
 :stylesheet: stylesheet.css
 :revdate: 20/06/2023

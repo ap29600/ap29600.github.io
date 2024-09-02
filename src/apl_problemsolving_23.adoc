@@ -3,7 +3,8 @@
 :source-highlighter: pygments
 :author: Andrea Piseri
 :email: andrea.piseri@gmail.com
-:website: https://ap29600.github.io[CRC]
+:docinfo: shared-header
+:website-home: index.html
 :toc: preamble
 :stylesheet: stylesheet.css
 :tocdepth: 4
