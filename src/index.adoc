@@ -4,5 +4,6 @@
 
 == Articles:
 
-* link:just_cos.html[Just `cos`]: lessons learned implementing trig functions without floating point numbers
+* link:just_cos.html[Just `cos`]: lessons learned implementing trig functions without floating point numbers.
 * link:apl_problemsolving_23.html[APL Problem Solving Competition 2023]: Reflections and explanations of my solutions to the competition.
+* link:code_report_performance_golf.html[on a Code Report performance golf]: That one time I got mad at youtube UI and wrote a blog post out of spite.

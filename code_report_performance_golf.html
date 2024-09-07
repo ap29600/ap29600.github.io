@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<meta name="author" content="Andrea Piseri">
+<title>on a Code Report performance golf</title>
+<style>
+@charset "UTF-8";
+
+@import "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/fonts.css";
+
+html {
+	background: #f7f7f7;
+	color: #282828;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+#navbar {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	background: #eaeaea;
+}
+
+#header {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	.details {
+		display: flex;
+		flex-flow: row;
+		max-width: fit-content;
+		margin-left:auto;
+		margin-right:auto;
+		br + span::before {
+			margin: 1em;
+			content: "-";
+		}
+	}
+	width: none;
+	background: #eaeaea;
+	border-bottom: 1px solid;
+}
+
+#toc {
+	border-bottom: 1px solid;
+	padding-bottom:0.5em;
+}
+
+#content {
+	width: 80%;
+	max-width: 80em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#footer {
+	bottom:0;
+	margin-top: auto;
+	border-top: 1px solid;
+	max-width: none;
+	background: #f0f0f0;
+	padding: 1em;
+}
+
+body {
+	display: flex;
+	flex-direction:column;
+	padding: 0;
+	margin: 0;
+	min-height: 100%;
+	font-family: Computer Modern Concrete, Georgia, serif;
+}
+
+table {
+	background: #eaeaea;
+	border-collapse: collapse;
+	border-radius: 5px;
+	border-bottom: 1px solid;
+	border-top: 2px solid;
+}
+
+th {
+	border-bottom: 1px solid;
+}
+
+tr {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+tbody td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+td p {
+	margin: 5px;
+	margin: 5px;
+}
+
+pre {
+	white-space: pre;
+	background: #eaeaea !important;
+	overflow-x: auto;
+	border-radius: 5px;
+	padding: 1em;
+}
+
+.MathJax_Display {
+	margin: 1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-x: auto;
+	display: block;
+}
+
+:not(pre) > code {
+	background: #eaeaea;
+	border-radius: 5px;
+}
+
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #880000 } /* Name.Constant */
+pre.pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #0000FF } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="navbar">
+	<a href="index.html">CRC Home</a>
+</div>
+<div id="header">
+<h1>on a Code Report performance golf</h1>
+<div class="details">
+<span id="author" class="author">Andrea Piseri</span><br>
+<span id="email" class="email"><a href="mailto:andrea.piseri@gmail.com">andrea.piseri@gmail.com</a></span><br>
+<span id="revdate">07/09/2024</span>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Yesterday I saw one of <a href="https://www.youtube.com/@code_report">Code Report</a>'s
+youtube videos on language comparisons, and got into speculation about what an
+optimal solution to the showcased problem would look like; another youtube user
+replied to the second of two comments of mine and I discovered that both my original
+comment and a third one that I had just written in reply were nowhere to be found,
+so this is my way of giving up and recording my thoughts about it in a more
+reliable way.</p>
+</div>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_the_original_video">The original video</a></li>
+<li><a href="#_doing_better">Doing better</a></li>
+<li><a href="#_the_second_iteration">The second iteration</a></li>
+<li><a href="#_dreaming_of_perfection">Dreaming of perfection</a></li>
+</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_original_video"><a href="https://www.youtube.com/watch?v=O9AsxoQzNdI">The original video</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This was Connor&#8217;s usual formula of taking a relatively easy programming problem
+and solving it in different languages, this time C++, Python, APL and BQN.
+The problem statement is as followed: we are given a list of \(n\) integers,
+as well as two additional integer parameters \(k\) and \(m\), and we must
+return the result of applying the following process \(k\) times:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>find the first occurrence of the smallest element of <code>nums</code></p>
+</li>
+<li>
+<p>multiply it by \(m\)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Connor&#8217;s solutions were a literal implementation of the loop above in all four
+languages, as the video focuses on the expressivity of the languages rather
+than on the specific problem, which I appreciate.
+However, I was also left unsatisfied (as was another commenter) by the time
+complexity of the solution: surely it&#8217;s possible to do better.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_doing_better">Doing better</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>User @Roibarkan first gave this solution in python using a heap priority queue,
+using tuples of values and indices into the original array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-n">H</span> <span class="tok-o">=</span> <span class="tok-n">heapq</span><span class="tok-o">.</span><span class="tok-n">heapify</span><span class="tok-p">([(</span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-n">i</span><span class="tok-p">)</span> <span class="tok-k">for</span> <span class="tok-n">i</span><span class="tok-p">,</span> <span class="tok-n">x</span> <span class="tok-ow">in</span> <span class="tok-n">enumarate</span><span class="tok-p">(</span><span class="tok-n">nums</span><span class="tok-p">)])</span>
+<span class="tok-n">val</span><span class="tok-p">,</span> <span class="tok-n">idx</span> <span class="tok-o">=</span> <span class="tok-n">heapq</span><span class="tok-o">.</span><span class="tok-n">heappop</span><span class="tok-p">(</span><span class="tok-n">H</span><span class="tok-p">)</span>
+<span class="tok-k">for</span> <span class="tok-n">_</span> <span class="tok-ow">in</span> <span class="tok-nb">range</span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-p">):</span>
+  <span class="tok-n">nums</span><span class="tok-p">[</span><span class="tok-n">idx</span><span class="tok-p">]</span> <span class="tok-o">*=</span>  <span class="tok-n">m</span>
+  <span class="tok-n">val</span><span class="tok-p">,</span> <span class="tok-n">idx</span> <span class="tok-o">=</span> <span class="tok-n">heapq</span><span class="tok-o">.</span><span class="tok-n">heappushpop</span><span class="tok-p">(</span><span class="tok-n">H</span><span class="tok-p">,</span> <span class="tok-p">(</span><span class="tok-n">nums</span><span class="tok-p">[</span><span class="tok-n">idx</span><span class="tok-p">],</span> <span class="tok-n">idx</span><span class="tok-p">))</span>
+<span class="tok-k">return</span> <span class="tok-n">nums</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I translated it into C++ mostly out of the same kind of curiosity that Connor
+must have had when making the original video, and was happy to see that it was
+still relatively short.
+The version shown here isn&#8217;t the original as I integrated some suggestions by Roibarkan,
+but the idea is there.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="cpp"><span></span><span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;vector&gt;</span>
+<span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;algorithm&gt;</span>
+<span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;ranges&gt;</span>
+<span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;numeric&gt;</span>
+
+<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">get_final_state</span><span class="tok-p">(</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">vector</span><span class="tok-o">&lt;</span><span class="tok-kt">uint64_t</span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">inout_vals</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">k</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+<span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-k">const</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">){</span>
+<span class="tok-w">		</span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">!=</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">])</span>
+<span class="tok-w">			</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">];</span>
+<span class="tok-w">		</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">;</span>
+<span class="tok-w">	</span><span class="tok-p">};</span>
+<span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">vector</span><span class="tok-o">&lt;</span><span class="tok-kt">uint64_t</span><span class="tok-o">&gt;</span><span class="tok-p">(</span><span class="tok-n">inout_vals</span><span class="tok-p">.</span><span class="tok-n">size</span><span class="tok-p">());</span>
+<span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">iota</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">);</span>
+<span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">make_heap</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">);</span>
+<span class="tok-w">	</span><span class="tok-k">while</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-o">--</span><span class="tok-p">)</span>
+<span class="tok-w">	</span><span class="tok-p">{</span>
+<span class="tok-w">		</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">pop_heap</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">);</span>
+<span class="tok-w">		</span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">perm</span><span class="tok-p">.</span><span class="tok-n">back</span><span class="tok-p">()]</span><span class="tok-w"> </span><span class="tok-o">*=</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">;</span>
+<span class="tok-w">		</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">push_heap</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">);</span>
+<span class="tok-w">	</span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How good is this solution? Well, let&#8217;s compare it to the ones in the video and
+we&#8217;ll go from there.
+Connor&#8217;s solutions are all \(O(nk)\) in time, and somewhere between \(O(1)\)
+and \(O(n)\) additional space.
+Space is trivially \(O(n)\) additional, since the only allocation is for the
+permutation, and time is \(O(n + k \log(n))\) because <code>std::make_heap</code> is linear,
+while <code>std::push_heap</code> and <code>std::pop_heap</code> are both \(O(\log(n))\). That&#8217;s pretty good,
+and depending on the relative sizes of \(k\) and \(n\) it could be as good as we get.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_second_iteration">The second iteration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>User @Qhartb then suggested that there was probably something to be gained by partitioning
+the elements by their log base \(m\), which ultimately made me think about this solution:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>keep the unsorting permutation of the input in <code>perm</code>, so that the
+<code>i</code>th element of <code>perm</code> is the index of the <code>i</code>th smallest
+element in <code>inout_vals</code>.</p>
+</li>
+<li>
+<p>maintain a prefix <code>pre</code> of <code>perm</code> with the property that the largest element
+whose index is in <code>pre</code> is smaller than the smallest element multiplied
+by \(m\).</p>
+</li>
+<li>
+<p>at each step,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>if \(k\) is smaller than or equal to the length of the range, then multiply by
+\(m\) the first \(k\) elements indexed by <code>pre</code> and terminate. Otherwise,</p>
+</li>
+<li>
+<p>multiply by \(m\) each element indexed by <code>pre</code>.
+(this is correct because once the first element in <code>pre</code> is multiplied
+by \(m\), it becomes larger than any element in <code>pre</code>, and therefore the
+smallest element in <code>inout_vals</code> corresponds to the second element in
+<code>pre</code>, and so on.</p>
+</li>
+<li>
+<p>Subtract the length of <code>pre</code> from \(k\).</p>
+</li>
+<li>
+<p>Find the largest prefix of <code>perm</code> that satisfies <code>pre</code>'s invariant by
+scanning the remaining elements until one larger than or equal to the
+largest element currently in <code>pre</code> is found.</p>
+</li>
+<li>
+<p>Merge the range found this way into <code>pre</code> (note that the elements in <code>pre</code>
+have all been multiplied by \(m\) and are still sorted relative to each
+other, but not relative to the rest of the range).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There is a big caveat here: the sort has to be stable, because the original
+algorithm explicitly mentions the first occurrence of the minimum value being
+multiplied by \(m\); this was also a mistake I made in the first translation
+of my heap-based implementation, because my comparison didn&#8217;t actually
+look at the indices to break ties in the values.</p>
+</div>
+<div class="paragraph">
+<p>Now with that out of the way, here is the implementation in C++.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="cpp"><span></span><span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;vector&gt;</span>
+<span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;algorithm&gt;</span>
+<span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;ranges&gt;</span>
+<span class="tok-cp">#include</span><span class="tok-w"> </span><span class="tok-cpf">&lt;numeric&gt;</span>
+
+<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">get_final_state</span><span class="tok-p">(</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">vector</span><span class="tok-o">&lt;</span><span class="tok-kt">uint64_t</span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-n">inout_vals</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">k</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+<span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-k">const</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">){</span>
+<span class="tok-w">		</span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">!=</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">])</span>
+<span class="tok-w">			</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">];</span>
+<span class="tok-w">		</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">;</span>
+<span class="tok-w">	</span><span class="tok-p">};</span>
+<span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">vector</span><span class="tok-o">&lt;</span><span class="tok-kt">uint64_t</span><span class="tok-o">&gt;</span><span class="tok-p">(</span><span class="tok-n">inout_vals</span><span class="tok-p">.</span><span class="tok-n">size</span><span class="tok-p">());</span>
+<span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">iota</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">);</span>
+<span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">sort</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">);</span>
+<span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-p">.</span><span class="tok-n">begin</span><span class="tok-p">();</span>
+<span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-p">.</span><span class="tok-n">begin</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span>
+<span class="tok-w">	</span><span class="tok-k">while</span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">distance</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">))</span>
+<span class="tok-w">	</span><span class="tok-p">{</span>
+<span class="tok-w">		</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">for_each</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">*=</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-p">});</span>
+<span class="tok-w">		</span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">distance</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">);</span>
+<span class="tok-w">		</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">mid</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">;</span>
+<span class="tok-w">		</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">find_if</span><span class="tok-p">(</span><span class="tok-n">mid</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-p">.</span><span class="tok-n">end</span><span class="tok-p">(),</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&gt;=</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-o">*</span><span class="tok-p">(</span><span class="tok-n">mid</span><span class="tok-mi">-1</span><span class="tok-p">)];</span><span class="tok-w"> </span><span class="tok-p">});</span>
+<span class="tok-w">		</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">inplace_merge</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">mid</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">);</span>
+<span class="tok-w">	</span><span class="tok-p">}</span>
+<span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">for_each</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-n">k</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">*=</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-p">});</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That was quite a bit of work, and it could be all for nothing. Did we actually
+improve the time complexity? In short, no. But also maybe, kind of?
+I claim that the time complexity of this algorithm is \(O(n \log(n) + k)\),
+and that&#8217;s incomparable to \(O(n + k \log(n))\), because we don&#8217;t know the
+relative sizes of \(k\) and \(n\). If they are roughly the same, then
+we have neither improved nor degraded the performance, if \(k\) is smaller
+than \(n\) we&#8217;ve degraded it, and if \(n\) is smaller then we&#8217;ve improved.
+In a vacuum, there&#8217;s no way to tell, which is kind of the problem with such an
+abstract formulation: there is just no objective metric to judge how good a
+solution is (as long as it&#8217;s not \(O(nk)\) :P).</p>
+</div>
+<div class="paragraph">
+<p>For the sake of argument, let&#8217;s say that \(k\) and \(n\) are roughly the same size:</p>
+</div>
+<div class="paragraph">
+<p>I&#8217;m pretty confident that the constant factors of the second implementation are
+lower than the first one, simply because the multiply loop is tighter;
+as soon as the <code>pre</code> range gets a few elements, that&#8217;s going to make a
+difference over pushing and popping from a heap repeatedly.</p>
+</div>
+<div class="paragraph">
+<p>This also goes for the sort: I hope that the standard library sort is
+faster than a very naive heap sort, which by extension makes it faster than
+the repeated heap usage of the first solution.</p>
+</div>
+<div class="paragraph">
+<p>But now the proof that this last solution is \(O(n \log(n) + k)\) is a bit overdue,
+so let&#8217;s get on with it.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the \(n \log(n)\) part is just the sort, nothing special.</p>
+</li>
+<li>
+<p>for the loop part, we prove the following statements:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>at most \(k\) iterations of the outer loop are performed.</p>
+</li>
+<li>
+<p>at most \(k\) multiplications are performed in total.</p>
+</li>
+<li>
+<p>the sum of the sizes of ranges fed to <code>std::merge</code> is at most
+the number of multiplications performed, plus \(k\).</p>
+</li>
+<li>
+<p>the total number of iterations of <code>std::find_if</code> is at most
+the number of multiplications performed, plus \(k\).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The first two are trivial because \(k\) decreases with the number of
+multiplications performed, and at least one multiplication is performed
+on each iteration of the loop.</p>
+</div>
+<div class="paragraph">
+<p>The third follows trivially from the fact that the <code>merge</code>d range is either
+immediately iterated on with a multiplication pass in the following iteration
+of the loop, or it is the final merge which accounts for the extra \(k\).</p>
+</div>
+<div class="paragraph">
+<p>The last statement is true for the same reason, so the total operation
+count for the loop is \(O(k)\) as all the mentioned operations are linear.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dreaming_of_perfection">Dreaming of perfection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We could realistically push the asymptotic cost down to \(O(n + k)\), if
+the C++ standard library offered a <code>std::radix_sort</code> with a custom projection
+(radix sort can be easily implemented to be stable), though if I really wanted to
+I could write one myself.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2024-09-08 01:29:04 +0200
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>

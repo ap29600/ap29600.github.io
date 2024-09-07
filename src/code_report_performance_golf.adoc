@@ -1,0 +1,209 @@
+= on a Code Report performance golf
+:stem: latexmath
+:source-highlighter: pygments
+:author: Andrea Piseri
+:email: andrea.piseri@gmail.com
+:docinfo: shared-header
+:website-home: index.html
+:toc: preamble
+:stylesheet: stylesheet.css
+:tocdepth: 4
+:revdate: 07/09/2024
+
+Yesterday I saw one of link:https://www.youtube.com/@code_report[Code Report]'s 
+youtube videos on language comparisons, and got into speculation about what an
+optimal solution to the showcased problem would look like; another youtube user 
+replied to the second of two comments of mine and I discovered that both my original 
+comment and a third one that I had just written in reply were nowhere to be found,
+so this is my way of giving up and recording my thoughts about it in a more 
+reliable way.
+
+== link:https://www.youtube.com/watch?v=O9AsxoQzNdI[The original video]
+This was Connor's usual formula of taking a relatively easy programming problem
+and solving it in different languages, this time C++, Python, APL and BQN.
+The problem statement is as followed: we are given a list of stem:[n] integers,
+as well as two additional integer parameters stem:[k] and stem:[m], and we must
+return the result of applying the following process stem:[k] times:
+
+* find the first occurrence of the smallest element of `nums`
+* multiply it by stem:[m]
+
+Connor's solutions were a literal implementation of the loop above in all four
+languages, as the video focuses on the expressivity of the languages rather
+than on the specific problem, which I appreciate. 
+However, I was also left unsatisfied (as was another commenter) by the time 
+complexity of the solution: surely it's possible to do better.
+
+== Doing better
+
+User @Roibarkan first gave this solution in python using a heap priority queue, 
+using tuples of values and indices into the original array.
+
+[source,python]
+----
+H = heapq.heapify([(x,i) for i, x in enumarate(nums)])
+val, idx = heapq.heappop(H)
+for _ in range(k):
+  nums[idx] *=  m
+  val, idx = heapq.heappushpop(H, (nums[idx], idx))
+return nums
+----
+
+I translated it into C++ mostly out of the same kind of curiosity that Connor
+must have had when making the original video, and was happy to see that it was
+still relatively short.
+The version shown here isn't the original as I integrated some suggestions by Roibarkan,
+but the idea is there.
+
+[source,cpp]
+----
+#include <vector>
+#include <algorithm>
+#include <ranges>
+#include <numeric>
+
+void get_final_state(std::vector<uint64_t> &inout_vals, uint64_t k, uint64_t m)
+{
+	auto const cmp = [&](auto i, auto j){
+		if (inout_vals[i] != inout_vals[j])
+			return inout_vals[i] < inout_vals[j];
+		return i < j; 
+	};
+	auto perm = std::vector<uint64_t>(inout_vals.size());
+	std::ranges::iota(perm, 0);
+	std::ranges::make_heap(perm, cmp);
+	while (k--)
+	{
+		std::ranges::pop_heap(perm, cmp);
+		inout_vals[perm.back()] *= m;
+		std::ranges::push_heap(perm, cmp);
+	}
+}
+----
+
+How good is this solution? Well, let's compare it to the ones in the video and
+we'll go from there.
+Connor's solutions are all stem:[O(nk)] in time, and somewhere between stem:[O(1)] 
+and stem:[O(n)] additional space.
+Space is trivially stem:[O(n)] additional, since the only allocation is for the
+permutation, and time is stem:[O(n + k \log(n))] because `std::make_heap` is linear,
+while `std::push_heap` and `std::pop_heap` are both stem:[O(\log(n))]. That's pretty good,
+and depending on the relative sizes of stem:[k] and stem:[n] it could be as good as we get.
+
+== The second iteration
+
+User @Qhartb then suggested that there was probably something to be gained by partitioning
+the elements by their log base stem:[m], which ultimately made me think about this solution:
+
+* keep the unsorting permutation of the input in `perm`, so that the 
+	``i``th element of `perm` is the index of the ``i``th smallest
+	element in `inout_vals`.
+* maintain a prefix `pre` of `perm` with the property that the largest element 
+	whose index is in `pre` is smaller than the smallest element multiplied
+	by stem:[m].
+* at each step,
+** if stem:[k] is smaller than or equal to the length of the range, then multiply by 
+	stem:[m] the first stem:[k] elements indexed by `pre` and terminate. Otherwise,
+** multiply by stem:[m] each element indexed by `pre`. 
+	(this is correct because once the first element in `pre` is multiplied
+	by stem:[m], it becomes larger than any element in `pre`, and therefore the 
+	smallest element in `inout_vals` corresponds to the second element in
+	`pre`, and so on.
+** Subtract the length of `pre` from stem:[k].
+** Find the largest prefix of `perm` that satisfies ``pre``'s invariant by 
+	scanning the remaining elements until one larger than or equal to the
+	largest element currently in `pre` is found. 
+** Merge the range found this way into `pre` (note that the elements in `pre` 
+	have all been multiplied by stem:[m] and are still sorted relative to each
+	other, but not relative to the rest of the range).
+
+There is a big caveat here: the sort has to be stable, because the original
+algorithm explicitly mentions the first occurrence of the minimum value being
+multiplied by stem:[m]; this was also a mistake I made in the first translation
+of my heap-based implementation, because my comparison didn't actually
+look at the indices to break ties in the values.
+
+Now with that out of the way, here is the implementation in C++.
+
+[source,cpp]
+----
+#include <vector>
+#include <algorithm>
+#include <ranges>
+#include <numeric>
+
+void get_final_state(std::vector<uint64_t> &inout_vals, uint64_t k, uint64_t m)
+{
+	auto const cmp = [&](auto i, auto j){
+		if (inout_vals[i] != inout_vals[j])
+			return inout_vals[i] < inout_vals[j];
+		return i < j; 
+	};
+	auto perm = std::vector<uint64_t>(inout_vals.size());
+	std::ranges::iota(perm, 0);
+	std::ranges::sort(perm, cmp);
+	auto left = perm.begin();
+	auto right = perm.begin() + 1;
+	while(k > std::distance(left, right))
+	{
+		std::for_each(left, right, [&](auto i){ inout_vals[i] *= m; });
+		k -= std::distance(left, right);
+		auto mid = right;
+		right = std::find_if(mid, perm.end(), [&](auto i){ return inout_vals[i] >= inout_vals[*(mid-1)]; });
+		std::inplace_merge(left, mid, right, cmp);
+	}
+	std::for_each(left, left + k, [&](auto i){ inout_vals[i] *= m; });
+}
+----
+
+That was quite a bit of work, and it could be all for nothing. Did we actually 
+improve the time complexity? In short, no. But also maybe, kind of?
+I claim that the time complexity of this algorithm is stem:[O(n \log(n) + k)],
+and that's incomparable to stem:[O(n + k \log(n))], because we don't know the
+relative sizes of stem:[k] and stem:[n]. If they are roughly the same, then
+we have neither improved nor degraded the performance, if stem:[k] is smaller
+than stem:[n] we've degraded it, and if stem:[n] is smaller then we've improved.
+In a vacuum, there's no way to tell, which is kind of the problem with such an
+abstract formulation: there is just no objective metric to judge how good a 
+solution is (as long as it's not stem:[O(nk)] :P).
+
+For the sake of argument, let's say that stem:[k] and stem:[n] are roughly the same size:
+
+I'm pretty confident that the constant factors of the second implementation are 
+lower than the first one, simply because the multiply loop is tighter;
+as soon as the `pre` range gets a few elements, that's going to make a 
+difference over pushing and popping from a heap repeatedly.
+
+This also goes for the sort: I hope that the standard library sort is
+faster than a very naive heap sort, which by extension makes it faster than
+the repeated heap usage of the first solution.
+
+But now the proof that this last solution is stem:[O(n \log(n) + k)] is a bit overdue,
+so let's get on with it.
+
+* the stem:[n \log(n)] part is just the sort, nothing special.
+* for the loop part, we prove the following statements:
+** at most stem:[k] iterations of the outer loop are performed.
+** at most stem:[k] multiplications are performed in total.
+** the sum of the sizes of ranges fed to `std::merge` is at most
+	the number of multiplications performed, plus stem:[k].
+** the total number of iterations of `std::find_if` is at most
+	the number of multiplications performed, plus stem:[k].
+
+The first two are trivial because stem:[k] decreases with the number of 
+multiplications performed, and at least one multiplication is performed 
+on each iteration of the loop.
+
+The third follows trivially from the fact that the ``merge``d range is either 
+immediately iterated on with a multiplication pass in the following iteration 
+of the loop, or it is the final merge which accounts for the extra stem:[k].
+
+The last statement is true for the same reason, so the total operation 
+count for the loop is stem:[O(k)] as all the mentioned operations are linear.
+
+== Dreaming of perfection
+
+We could realistically push the asymptotic cost down to stem:[O(n + k)], if
+the C++ standard library offered a `std::radix_sort` with a custom projection
+(radix sort can be easily implemented to be stable), though if I really wanted to
+I could write one myself.
