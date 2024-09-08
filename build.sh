@@ -2,7 +2,5 @@
 
 for DOCUMENT in `ls src/*.adoc`; do
 	OUTPUT="$(basename $DOCUMENT .adoc).html"
-	if [ $(stat $DOCUMENT --printf="%X") -gt $(stat $OUTPUT --printf="%X") ]; then
-		asciidoctor $DOCUMENT -o $OUTPUT
-	fi
+	[ $(stat $DOCUMENT --printf="%X") -lt $(stat $OUTPUT --printf="%X") ] || asciidoctor $DOCUMENT -o $OUTPUT
 done

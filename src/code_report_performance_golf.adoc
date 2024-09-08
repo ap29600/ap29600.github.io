@@ -54,6 +54,9 @@ must have had when making the original video, and was happy to see that it was
 still relatively short.
 The version shown here isn't the original as I integrated some suggestions by Roibarkan,
 but the idea is there.
+footnote:[There were a couple revisions due to me both getting the direction of the 
+comparison "wrong" and also forgetting that in Cpp `heap` refers to a max-heap,
+so the errors cancelled out]
 
 [source,cpp]
 ----
@@ -66,8 +69,8 @@ void get_final_state(std::vector<uint64_t> &inout_vals, uint64_t k, uint64_t m)
 {
 	auto const cmp = [&](auto i, auto j){
 		if (inout_vals[i] != inout_vals[j])
-			return inout_vals[i] < inout_vals[j];
-		return i < j; 
+			return inout_vals[i] > inout_vals[j];
+		return i > j; 
 	};
 	auto perm = std::vector<uint64_t>(inout_vals.size());
 	std::ranges::iota(perm, 0);
@@ -121,7 +124,8 @@ There is a big caveat here: the sort has to be stable, because the original
 algorithm explicitly mentions the first occurrence of the minimum value being
 multiplied by stem:[m]; this was also a mistake I made in the first translation
 of my heap-based implementation, because my comparison didn't actually
-look at the indices to break ties in the values.
+look at the indices to break ties in the values footnote:[And in fact the first draft of this
+post also forgot to do break ties in the linear search of the second implementation].
 
 Now with that out of the way, here is the implementation in C++.
 
@@ -149,7 +153,7 @@ void get_final_state(std::vector<uint64_t> &inout_vals, uint64_t k, uint64_t m)
 		std::for_each(left, right, [&](auto i){ inout_vals[i] *= m; });
 		k -= std::distance(left, right);
 		auto mid = right;
-		right = std::find_if(mid, perm.end(), [&](auto i){ return inout_vals[i] >= inout_vals[*(mid-1)]; });
+		right = std::find_if(mid, perm.end(), [&](auto i){ return cmp(*(mid-1), i); });
 		std::inplace_merge(left, mid, right, cmp);
 	}
 	std::for_each(left, left + k, [&](auto i){ inout_vals[i] *= m; });
@@ -201,9 +205,23 @@ of the loop, or it is the final merge which accounts for the extra stem:[k].
 The last statement is true for the same reason, so the total operation 
 count for the loop is stem:[O(k)] as all the mentioned operations are linear.
 
+== Benchmarks
+
+the second implementation is in fact a lot faster if stem:[k] and stem:[n]
+are both the same order of magnitude and large.
+The timings for stem:[n = k = 1'000'000, m = 3] and random elements in the 
+range stem:[(0, n\]] are as follows:
+
+[source]
+----
+heap-based:      1761457us
+partition-based: 348003us
+----
+
 == Dreaming of perfection
 
 We could realistically push the asymptotic cost down to stem:[O(n + k)], if
 the C++ standard library offered a `std::radix_sort` with a custom projection
 (radix sort can be easily implemented to be stable), though if I really wanted to
+
 I could write one myself.

@@ -53,7 +53,7 @@ html {
 }
 
 #content {
-	width: 80%;
+	width: 90%;
 	max-width: 80em;
 	margin-left: auto;
 	margin-right: auto;
@@ -230,6 +230,7 @@ reliable way.</p>
 <li><a href="#_the_original_video">The original video</a></li>
 <li><a href="#_doing_better">Doing better</a></li>
 <li><a href="#_the_second_iteration">The second iteration</a></li>
+<li><a href="#_benchmarks">Benchmarks</a></li>
 <li><a href="#_dreaming_of_perfection">Dreaming of perfection</a></li>
 </ul>
 </div>
@@ -285,7 +286,8 @@ using tuples of values and indices into the original array.</p>
 must have had when making the original video, and was happy to see that it was
 still relatively short.
 The version shown here isn&#8217;t the original as I integrated some suggestions by Roibarkan,
-but the idea is there.</p>
+but the idea is there.
+<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -298,8 +300,8 @@ but the idea is there.</p>
 <span class="tok-p">{</span>
 <span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-k">const</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">){</span>
 <span class="tok-w">		</span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">!=</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">])</span>
-<span class="tok-w">			</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">];</span>
-<span class="tok-w">		</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">;</span>
+<span class="tok-w">			</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">j</span><span class="tok-p">];</span>
+<span class="tok-w">		</span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">;</span>
 <span class="tok-w">	</span><span class="tok-p">};</span>
 <span class="tok-w">	</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">vector</span><span class="tok-o">&lt;</span><span class="tok-kt">uint64_t</span><span class="tok-o">&gt;</span><span class="tok-p">(</span><span class="tok-n">inout_vals</span><span class="tok-p">.</span><span class="tok-n">size</span><span class="tok-p">());</span>
 <span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">ranges</span><span class="tok-o">::</span><span class="tok-n">iota</span><span class="tok-p">(</span><span class="tok-n">perm</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">);</span>
@@ -382,7 +384,7 @@ other, but not relative to the rest of the range).</p>
 algorithm explicitly mentions the first occurrence of the minimum value being
 multiplied by \(m\); this was also a mistake I made in the first translation
 of my heap-based implementation, because my comparison didn&#8217;t actually
-look at the indices to break ties in the values.</p>
+look at the indices to break ties in the values <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>.</p>
 </div>
 <div class="paragraph">
 <p>Now with that out of the way, here is the implementation in C++.</p>
@@ -411,7 +413,7 @@ look at the indices to break ties in the values.</p>
 <span class="tok-w">		</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">for_each</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">*=</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-p">});</span>
 <span class="tok-w">		</span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">-=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">distance</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">);</span>
 <span class="tok-w">		</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">mid</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">;</span>
-<span class="tok-w">		</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">find_if</span><span class="tok-p">(</span><span class="tok-n">mid</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-p">.</span><span class="tok-n">end</span><span class="tok-p">(),</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&gt;=</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-o">*</span><span class="tok-p">(</span><span class="tok-n">mid</span><span class="tok-mi">-1</span><span class="tok-p">)];</span><span class="tok-w"> </span><span class="tok-p">});</span>
+<span class="tok-w">		</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">find_if</span><span class="tok-p">(</span><span class="tok-n">mid</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">perm</span><span class="tok-p">.</span><span class="tok-n">end</span><span class="tok-p">(),</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">(</span><span class="tok-o">*</span><span class="tok-p">(</span><span class="tok-n">mid</span><span class="tok-mi">-1</span><span class="tok-p">),</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">);</span><span class="tok-w"> </span><span class="tok-p">});</span>
 <span class="tok-w">		</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">inplace_merge</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">mid</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">right</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cmp</span><span class="tok-p">);</span>
 <span class="tok-w">	</span><span class="tok-p">}</span>
 <span class="tok-w">	</span><span class="tok-n">std</span><span class="tok-o">::</span><span class="tok-n">for_each</span><span class="tok-p">(</span><span class="tok-n">left</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-n">k</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-o">&amp;</span><span class="tok-p">](</span><span class="tok-k">auto</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">){</span><span class="tok-w"> </span><span class="tok-n">inout_vals</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">*=</span><span class="tok-w"> </span><span class="tok-n">m</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-p">});</span>
@@ -493,20 +495,48 @@ count for the loop is \(O(k)\) as all the mentioned operations are linear.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_benchmarks">Benchmarks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>the second implementation is in fact a lot faster if \(k\) and \(n\)
+are both the same order of magnitude and large.
+The timings for \(n = k = 1'000'000, m = 3\) and random elements in the
+range \((0, n]\) are as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code><span></span>heap-based:      1761457us
+partition-based: 348003us</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_dreaming_of_perfection">Dreaming of perfection</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We could realistically push the asymptotic cost down to \(O(n + k)\), if
 the C++ standard library offered a <code>std::radix_sort</code> with a custom projection
-(radix sort can be easily implemented to be stable), though if I really wanted to
-I could write one myself.</p>
+(radix sort can be easily implemented to be stable), though if I really wanted to</p>
+</div>
+<div class="paragraph">
+<p>I could write one myself.</p>
 </div>
 </div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. There were a couple revisions due to me both getting the direction of the comparison "wrong" and also forgetting that in Cpp <code>heap</code> refers to a max-heap, so the errors cancelled out
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. And in fact the first draft of this post also forgot to do break ties in the linear search of the second implementation
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-08 01:29:04 +0200
+Last updated 2024-09-08 14:16:56 +0200
 </div>
 </div>
 <script type="text/x-mathjax-config">
