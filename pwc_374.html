@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="author" content="Andrea Piseri">
+<title>The Weekly Challenge 374</title>
+<style>
+@charset "UTF-8";
+
+@import "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/fonts.css";
+
+html {
+	background: #f7f7f7;
+	color: #282828;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+#navbar {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	background: #eaeaea;
+}
+
+#header {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	.details {
+		display: flex;
+		flex-flow: row;
+		max-width: fit-content;
+		margin-left:auto;
+		margin-right:auto;
+		br + span::before {
+			margin: 1em;
+			content: "-";
+		}
+	}
+	width: none;
+	background: #eaeaea;
+	border-bottom: 1px solid;
+}
+
+#toc {
+	border-bottom: 1px solid;
+	padding-bottom:0.5em;
+}
+
+#content {
+	width: 90%;
+	max-width: 80em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#footer {
+	bottom:0;
+	margin-top: auto;
+	border-top: 1px solid;
+	max-width: none;
+	background: #f0f0f0;
+	padding: 1em;
+}
+
+body {
+	display: flex;
+	flex-direction:column;
+	padding: 0;
+	margin: 0;
+	min-height: 100%;
+	font-family: Computer Modern Concrete, Georgia, serif;
+}
+
+table {
+	background: #eaeaea;
+	border-collapse: collapse;
+	border-radius: 5px;
+	border-bottom: 1px solid;
+	border-top: 2px solid;
+}
+
+th {
+	border-bottom: 1px solid;
+}
+
+tr {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+tbody td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+td p {
+	margin: 5px;
+	margin: 5px;
+}
+
+pre {
+	white-space: pre;
+	background: #eaeaea !important;
+	overflow-x: auto;
+	border-radius: 5px;
+	padding: 1em;
+}
+
+.MathJax_Display {
+	margin: 1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-x: auto;
+	display: block;
+}
+
+:not(pre) > code {
+	background: #eaeaea;
+	border-radius: 5px;
+}
+
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #F00 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #04D } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #00F; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #800 } /* Name.Constant */
+pre.pygments .tok-nd { color: #A2F } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #00F } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #BBB } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #00F } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="navbar">
+	<a href="index.html">CRC Home</a>
+</div>
+<div id="header">
+<h1>The Weekly Challenge 374</h1>
+<div class="details">
+<span id="author" class="author">Andrea Piseri</span><br>
+<span id="email" class="email"><a href="mailto:andrea.piseri@gmail.com">andrea.piseri@gmail.com</a></span><br>
+<span id="revdate">19/05/2026</span>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I had some fun solving <a href="https://theweeklychallenge.org/blog/perl-weekly-challenge-374">The Weekly Challenge #374</a>, here&#8217;s how it went.</p>
+</div>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_task_1">Task 1</a></li>
+<li><a href="#_ok_but_like_how_does_it_work">Ok but like, how does it work?</a></li>
+<li><a href="#_better_solution">Better solution</a></li>
+<li><a href="#_parallel_solution">Parallel solution?</a></li>
+<li><a href="#_how_is_this_parallel">How is this parallel?</a></li>
+</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_task_1">Task 1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>asks us to find all vowel substrings of a given string, where a vowel substring is any substring that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>only contains vowels, and</p>
+</li>
+<li>
+<p>contains all vowels. <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>I&#8217;m solving in <a href="https://codeberg.org/growler/k">K</a>, and the first tempting approach is to just find all substrings and
+filter by the appropriate predicate. Is it short? Yes. Fast? Depends on the string&#8217;s length, but I&#8217;m tempted to say no.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">solve</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-p">({</span><span class="tok-o">~|/</span><span class="tok-p">(</span><span class="tok-o">|/^?</span><span class="tok-p">)</span><span class="tok-o">/&#39;</span><span class="tok-il">1</span><span class="tok-o">|:\</span><span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">;</span><span class="tok-s2">&quot;aeiou&quot;</span><span class="tok-p">)}</span><span class="tok-o">&#39;</span><span class="tok-p">)</span><span class="tok-o">#,/,\&#39;|&#39;,\|:</span>
+
+<span class="tok-n">solve</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeiou&quot;</span>
+<span class="tok-n">solve</span><span class="tok-w"> </span><span class="tok-s2">&quot;aaeeeiioouu&quot;</span>
+<span class="tok-n">solve</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeiouuaxaeiou&quot;</span>
+<span class="tok-n">solve</span><span class="tok-w"> </span><span class="tok-s2">&quot;uaeiou&quot;</span>
+<span class="tok-n">solve</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeioaeioa&quot;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ok_but_like_how_does_it_work">Ok but like, how does it work?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the reader in a hurry, if you&#8217;re only interested in good and readable solutions skip ahead to the next section. I promise it gets better.</p>
+</div>
+<div class="paragraph">
+<p><code>,/,\'|',\|:</code> is "all substrings": it works by composing a bunch of operations, right to left.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>|</code> is reverse, but for k grammar reasons it needs to be spelled <code>|:</code> in this context to disambiguate with its binary use</p>
+</li>
+<li>
+<p><code>,\</code> is a scan with an operation of concatenation, so it gives all prefixes (but we&#8217;re reversed, so it&#8217;s actually the reverses of all suffixes)</p>
+</li>
+<li>
+<p><code>|'</code> is reverse each, so now we have all suffixes</p>
+</li>
+<li>
+<p><code>,\'</code> same as before, but on each: we have all prefixes of each suffix</p>
+</li>
+<li>
+<p><code>,/</code> is fold with concatenation, so we have all prefixes of all suffixes. Hooray!</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>{~|/(|/^?)/'1|:\(x;"aeiou")}</code> is the vowel-string predicate:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{ }</code> introduce a unary function where <code>x</code> is the argument.</p>
+</li>
+<li>
+<p><code>1|:\(x;"aeiou")</code> generates the two pairs <code>(x;"aeiou")</code> and <code>("aeiou";x)</code></p>
+</li>
+<li>
+<p><code>(|/^?)/'</code> for each pair, checks if any elements of the right element are not in the left element, so if there&#8217;s anything in the set-wise difference</p>
+</li>
+<li>
+<p><code>~|/</code> checks if both results are false.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>({~|/(|/^?)/'1|:\(x;"aeiou")}')#,/,\'|',\|:</code> keeps from all substrings only those for which the predicate is true.</p>
+</div>
+<div class="paragraph">
+<p>Not exactly rocket surgery, but it works. Now for solving the problem efficiently, which is the actually fun challenge:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_better_solution">Better solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;re aiming for a solution that is as close to being linear in both time and space as possible, however that&#8217;s not possible in this case
+because the output itself might be larger than that. For example the string <code>"aeiou&#8230;&#8203;u"</code> has an all vowel substring for each length
+between 5 and the total length of the input. <code>"a&#8230;&#8203;aeiou&#8230;&#8203;u"</code> has a quadratic number of substrings, and the sum of their lengths is
+cubic in the length of the argument. Ok, we allow ourselves a linear factor in the total size of the result.</p>
+</div>
+<div class="paragraph">
+<p>The core of this solution is to find, for each position where a substring could end, for which starting positions the
+resulting substrings are all-vowel substrings. It&#8217;s easy to see that this is a contiguous range.</p>
+</div>
+<div class="paragraph">
+<p>Suppose we are at position \(i\) in the string: let \(j_c\) be the latest position of a consonant before or at \(i\), and
+\(j_a,j_e,j_i,j_o,j_u\) the latest positions of each respective vowel before or at \(i\).
+then it follows that any substring ending after the letter at \(i\) must start strictly after \(j_c\) and at or before all of the
+\(j_a,j_e,j_i,j_o,j_u\). This would give a fairly straight-forward sequential implementation like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">substrings</span><span class="tok-p">(</span><span class="tok-kt">char</span><span class="tok-w"> </span><span class="tok-k">const</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-n">s</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">	</span><span class="tok-k">static</span><span class="tok-w"> </span><span class="tok-kt">char</span><span class="tok-w"> </span><span class="tok-k">const</span><span class="tok-w"> </span><span class="tok-n">v</span><span class="tok-p">[]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&quot;aeiou&quot;</span><span class="tok-p">;</span>
+<span class="tok-w">	</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">6</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-mi">-1</span><span class="tok-p">,</span><span class="tok-mi">-1</span><span class="tok-p">,</span><span class="tok-mi">-1</span><span class="tok-p">,</span><span class="tok-mi">-1</span><span class="tok-p">,</span><span class="tok-mi">-1</span><span class="tok-p">,</span><span class="tok-mi">-1</span><span class="tok-p">};</span>
+<span class="tok-w">	</span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">s</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">];</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">		</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">strchrnul</span><span class="tok-p">(</span><span class="tok-n">v</span><span class="tok-p">,</span><span class="tok-n">s</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">])</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">v</span><span class="tok-p">;</span>
+<span class="tok-w">		</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-n">k</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">;</span>
+<span class="tok-w">		</span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mi">5</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">			</span><span class="tok-c1">// can&#39;t contain a consonant</span>
+<span class="tok-w">			</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">];</span>
+<span class="tok-w">			</span><span class="tok-c1">// must contain all vowels</span>
+<span class="tok-w">			</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">end</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">fold_min</span><span class="tok-p">(</span><span class="tok-n">j</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">5</span><span class="tok-p">);</span>
+<span class="tok-w">			</span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(;</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">end</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">begin</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">				</span><span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%*s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">s</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-p">);</span>
+<span class="tok-w">			</span><span class="tok-p">}</span>
+<span class="tok-w">		</span><span class="tok-p">}</span>
+<span class="tok-w">	</span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>but sequential is not what we&#8217;re going for here, so what can we do? let&#8217;s write some K.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parallel_solution">Parallel solution?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we would like to <a href="https://wiki.k-language.dev/wiki/Find">classify (<code>?</code>)</a> all characters as either one of the vowels, or a consonant.
+we <a href="https://wiki.k-language.dev/wiki/Concatenate">prepend (<code>,</code>)</a> one element for each of the character classes for good measure, we&#8217;ll see later how that
+helps.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">class</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeiou&quot;</span><span class="tok-o">?</span><span class="tok-s2">&quot;aeiouz&quot;</span><span class="tok-o">,</span><span class="tok-n">x</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then we <a href="https://wiki.k-language.dev/wiki/Group">make a dictionary (<code>=</code>)</a> out of that, so that we have the sorted list of
+positions at which each class occurs. we know the order of the keys because we prepended the elements earlier, so we
+can just take the values. Also our positions are relative to the padded string, so we subtract the length of the prefix.
+Remember the first five position lists are for the vowels, the last is for the consonants.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">occurrences</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-il">6</span><span class="tok-o">+.=</span><span class="tok-n">class</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we find all the candidate end positions: they&#8217;re just the positions <a href="https://wiki.k-language.dev/wiki/Where">where (<code>&amp;</code>)</a>
+the vowels are.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">end</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;~^</span><span class="tok-il">6</span><span class="tok-o">_</span><span class="tok-n">class</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For each end position, we want to find the position where the closest previous element of each class is.
+We can do this by <a href="https://wiki.k-language.dev/wiki/Binary_search">binary searching (<code>'</code>)</a> all of the end
+positions in <a href="https://wiki.k-language.dev/wiki/Each_left">each (<code>\:</code>)</a> of the occurrence lists,
+which should be a \(O(m * log n)\) operation, however a smart interpreter could do it in
+\(O(m + log n)\) given that the list of end points is sorted, so I&#8217;m going to say that&#8217;s the
+complexity of this step. Remember those sentinel values we added at the beginning? they make sure the search
+always succeeds, and the very first consonant occurs at position -1.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">previous</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">occurrences</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-n">x</span><span class="tok-o">&#39;</span><span class="tok-n">y</span><span class="tok-p">}</span><span class="tok-o">\:</span><span class="tok-w"> </span><span class="tok-n">end</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the first valid position to begin a substring is right after the previous occurrence of a consonant,
+and the first invalid position is right after the <a href="https://wiki.k-language.dev/wiki/Min">minimum (<code>&amp;</code>)</a> of the previous
+occurrences for the vowels. We <a href="https://wiki.k-language.dev/wiki/Enum">enumerate (<code>!</code>)</a> the valid beginning positions
+for a vowel substring, then we construct the ranges explicitly and use them to index into the original array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-p">(</span><span class="tok-n">vowel</span><span class="tok-p">;</span><span class="tok-o">,</span><span class="tok-n">consonant</span><span class="tok-p">)</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">0</span><span class="tok-w"> </span><span class="tok-il">5</span><span class="tok-o">_</span><span class="tok-n">previous</span>
+<span class="tok-nv">begins</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">consonant</span><span class="tok-o">+!&#39;</span><span class="tok-p">(</span><span class="tok-il">1</span><span class="tok-o">+&amp;/</span><span class="tok-n">vowel</span><span class="tok-p">)</span><span class="tok-o">-</span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">consonant</span>
+<span class="tok-nv">substrings</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-n">x</span><span class="tok-o">+!</span><span class="tok-n">y</span><span class="tok-o">-</span><span class="tok-n">x</span><span class="tok-p">}</span><span class="tok-o">.&#39;,/</span><span class="tok-n">begins</span><span class="tok-o">,&#39;&#39;</span><span class="tok-n">ends</span><span class="tok-o">+</span><span class="tok-il">1</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A couple of simplifications later our solution becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-p">{</span>
+<span class="tok-w"> </span><span class="tok-nv">class</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeiou&quot;</span><span class="tok-o">?</span><span class="tok-s2">&quot;aeiouz&quot;</span><span class="tok-o">,</span><span class="tok-n">x</span>
+<span class="tok-w"> </span><span class="tok-nv">occurrences</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-il">6</span><span class="tok-o">+.=</span><span class="tok-n">class</span>
+<span class="tok-w"> </span><span class="tok-nv">ends</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;~^</span><span class="tok-il">6</span><span class="tok-o">_</span><span class="tok-n">class</span>
+<span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">vowel</span><span class="tok-p">;</span><span class="tok-o">,</span><span class="tok-n">consonant</span><span class="tok-p">)</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">0</span><span class="tok-w"> </span><span class="tok-il">5</span><span class="tok-o">_</span><span class="tok-w"> </span><span class="tok-n">occurrences</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-n">x</span><span class="tok-o">&#39;</span><span class="tok-n">y</span><span class="tok-p">}</span><span class="tok-o">\:</span><span class="tok-w"> </span><span class="tok-n">ends</span>
+<span class="tok-w"> </span><span class="tok-nv">begins</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">consonant</span><span class="tok-o">+!&#39;</span><span class="tok-p">(</span><span class="tok-o">&amp;/</span><span class="tok-n">vowel</span><span class="tok-p">)</span><span class="tok-o">-</span><span class="tok-nv">consonant</span>
+<span class="tok-w"> </span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-n">x</span><span class="tok-o">+!</span><span class="tok-n">y</span><span class="tok-o">-</span><span class="tok-n">x</span><span class="tok-p">}</span><span class="tok-o">.&#39;,/</span><span class="tok-n">begins</span><span class="tok-o">,&#39;&#39;</span><span class="tok-n">ends</span><span class="tok-o">+</span><span class="tok-il">1</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_is_this_parallel">How is this parallel?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Ok, the k interpreter I wrote this for is completely sequential, but all operations I described can be implemented in parallel with
+techniques such as simple work batching for arithmetic, binary searching and classifying, and parallel gather operations for the calls to
+<code>where</code> and <code>group</code> (the key set is known and small), so that the entire thing (without the very last step of building all of
+the substrings) could be implemented very efficiently on a GPU. K lets me iterate about parallel algorithms quickly and easily,
+because most of its primitive operations are just very simple parallel algorithms.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. I&#8217;m going to assume the string is lowercase and will use the word "consonant" to mean any non-vowel character
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-05-19 20:18:33 +0200
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

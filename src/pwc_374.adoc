@@ -1,0 +1,172 @@
+= The Weekly Challenge 374
+:stem: latexmath
+:source-highlighter: pygments
+:author: Andrea Piseri
+:email: andrea.piseri@gmail.com
+:docinfo: shared-header
+:website-home: index.html
+:toc: preamble
+:stylesheet: stylesheet.css
+:tocdepth: 4
+:revdate: 19/05/2026
+
+I had some fun solving link:https://theweeklychallenge.org/blog/perl-weekly-challenge-374[The Weekly Challenge #374], here's how it went.
+
+== Task 1
+asks us to find all vowel substrings of a given string, where a vowel substring is any substring that:
+
+* only contains vowels, and
+* contains all vowels. footnote:[I'm going to assume the string is lowercase and will use the word "consonant" to mean any non-vowel character]
+
+I'm solving in link:https://codeberg.org/growler/k[K], and the first tempting approach is to just find all substrings and 
+filter by the appropriate predicate. Is it short? Yes. Fast? Depends on the string's length, but I'm tempted to say no.
+
+[source,k]
+----
+solve: ({~|/(|/^?)/'1|:\(x;"aeiou")}')#,/,\'|',\|:
+
+solve "aeiou"
+solve "aaeeeiioouu"
+solve "aeiouuaxaeiou"
+solve "uaeiou"
+solve "aeioaeioa"
+----
+
+== Ok but like, how does it work?
+
+For the reader in a hurry, if you're only interested in good and readable solutions skip ahead to the next section. I promise it gets better.
+
+``,/,\'|',\|:`` is "all substrings": it works by composing a bunch of operations, right to left.
+
+* `|` is reverse, but for k grammar reasons it needs to be spelled `|:` in this context to disambiguate with its binary use
+* `,\` is a scan with an operation of concatenation, so it gives all prefixes (but we're reversed, so it's actually the reverses of all suffixes)
+* `|'` is reverse each, so now we have all suffixes
+* `,\'` same as before, but on each: we have all prefixes of each suffix
+* `,/` is fold with concatenation, so we have all prefixes of all suffixes. Hooray!
+
+
+``{~|/(|/^?)/'1|:\(x;"aeiou")}`` is the vowel-string predicate:
+
+* ``{ }`` introduce a unary function where ``x`` is the argument.
+* ``1|:\(x;"aeiou")`` generates the two pairs ``(x;"aeiou")`` and ``("aeiou";x)``
+* ``(|/^?)/'`` for each pair, checks if any elements of the right element are not in the left element, so if there's anything in the set-wise difference
+* ``~|/`` checks if both results are false.
+
+``({~|/(|/^?)/'1|:\(x;"aeiou")}')#,/,\'|',\|:`` keeps from all substrings only those for which the predicate is true.
+
+Not exactly rocket surgery, but it works. Now for solving the problem efficiently, which is the actually fun challenge:
+
+== Better solution
+
+We're aiming for a solution that is as close to being linear in both time and space as possible, however that's not possible in this case
+because the output itself might be larger than that. For example the string ``"aeiou...u"`` has an all vowel substring for each length
+between 5 and the total length of the input. ``"a...aeiou...u"`` has a quadratic number of substrings, and the sum of their lengths is 
+cubic in the length of the argument. Ok, we allow ourselves a linear factor in the total size of the result.
+
+The core of this solution is to find, for each position where a substring could end, for which starting positions the
+resulting substrings are all-vowel substrings. It's easy to see that this is a contiguous range.
+
+Suppose we are at position stem:[i] in the string: let stem:[j_c] be the latest position of a consonant before or at stem:[i], and
+stem:[j_a,j_e,j_i,j_o,j_u] the latest positions of each respective vowel before or at stem:[i].
+then it follows that any substring ending after the letter at stem:[i] must start strictly after stem:[j_c] and at or before all of the
+stem:[j_a,j_e,j_i,j_o,j_u]. This would give a fairly straight-forward sequential implementation like:
+
+[source,c]
+----
+void substrings(char const *s) {
+	static char const v[] = "aeiou";
+	int j[6] = {-1,-1,-1,-1,-1,-1};
+	for (int i = 0; s[i]; ++i) {
+		int k = strchrnul(v,s[i]) - v;
+		j[k] = i;
+		if (k < 5) {
+			// can't contain a consonant
+			int begin = j[5];
+			// must contain all vowels
+			int end = fold_min(j, 5);
+			for (; begin < end; ++begin) {
+				printf("%*s\n", i + 1 - begin, s + begin);
+			}
+		}
+	}
+}
+----
+
+but sequential is not what we're going for here, so what can we do? let's write some K.
+
+== Parallel solution?
+
+First, we would like to link:https://wiki.k-language.dev/wiki/Find[classify (``?``)] all characters as either one of the vowels, or a consonant.
+we link:https://wiki.k-language.dev/wiki/Concatenate[prepend (``,``)] one element for each of the character classes for good measure, we'll see later how that
+helps.
+
+[source,k]
+----
+class: "aeiou"?"aeiouz",x
+----
+
+Then we link:https://wiki.k-language.dev/wiki/Group[make a dictionary (``=``)] out of that, so that we have the sorted list of 
+positions at which each class occurs. we know the order of the keys because we prepended the elements earlier, so we 
+can just take the values. Also our positions are relative to the padded string, so we subtract the length of the prefix.
+Remember the first five position lists are for the vowels, the last is for the consonants.
+
+[source,k]
+----
+occurrences: -6+.=class
+----
+
+Now we find all the candidate end positions: they're just the positions link:https://wiki.k-language.dev/wiki/Where[where (``&``)] 
+the vowels are.
+
+[source,k]
+----
+end: &~^6_class
+----
+
+For each end position, we want to find the position where the closest previous element of each class is.
+We can do this by link:https://wiki.k-language.dev/wiki/Binary_search[binary searching (``'``)] all of the end 
+positions in link:https://wiki.k-language.dev/wiki/Each_left[each (``\:``)] of the occurrence lists,
+which should be a stem:[O(m * log n)] operation, however a smart interpreter could do it in
+stem:[O(m + log n)] given that the list of end points is sorted, so I'm going to say that's the 
+complexity of this step. Remember those sentinel values we added at the beginning? they make sure the search
+always succeeds, and the very first consonant occurs at position -1.
+
+[source,k]
+----
+previous: occurrences {x@x'y}\: end
+----
+
+Now the first valid position to begin a substring is right after the previous occurrence of a consonant,
+and the first invalid position is right after the link:https://wiki.k-language.dev/wiki/Min[minimum (``&``)] of the previous
+occurrences for the vowels. We link:https://wiki.k-language.dev/wiki/Enum[enumerate (``!``)] the valid beginning positions
+for a vowel substring, then we construct the ranges explicitly and use them to index into the original array.
+
+[source,k]
+----
+(vowel;,consonant): 0 5_previous
+begins: 1+consonant+!'(1+&/vowel)-1+consonant
+substrings: x@ {x+!y-x}.',/begins,''ends+1
+----
+
+
+A couple of simplifications later our solution becomes:
+
+[source,k]
+----
+{
+ class: "aeiou"?"aeiouz",x
+ occurrences: -6+.=class
+ ends: &~^6_class
+ (vowel;,consonant): 0 5_ occurrences {1+x@x'y}\: ends
+ begins: consonant+!'(&/vowel)-consonant
+ : x@ {x+!y-x}.',/begins,''ends+1
+}
+----
+
+== How is this parallel?
+
+Ok, the k interpreter I wrote this for is completely sequential, but all operations I described can be implemented in parallel with
+techniques such as simple work batching for arithmetic, binary searching and classifying, and parallel gather operations for the calls to 
+``where`` and ``group`` (the key set is known and small), so that the entire thing (without the very last step of building all of
+the substrings) could be implemented very efficiently on a GPU. K lets me iterate about parallel algorithms quickly and easily, 
+because most of its primitive operations are just very simple parallel algorithms.

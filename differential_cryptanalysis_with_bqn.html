@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="author" content="Andrea Piseri">
+<title>Differential cryptanalysis with BQN</title>
+<style>
+@charset "UTF-8";
+
+@import "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/fonts.css";
+
+html {
+	background: #f7f7f7;
+	color: #282828;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+#navbar {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	background: #eaeaea;
+}
+
+#header {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	.details {
+		display: flex;
+		flex-flow: row;
+		max-width: fit-content;
+		margin-left:auto;
+		margin-right:auto;
+		br + span::before {
+			margin: 1em;
+			content: "-";
+		}
+	}
+	width: none;
+	background: #eaeaea;
+	border-bottom: 1px solid;
+}
+
+#toc {
+	border-bottom: 1px solid;
+	padding-bottom:0.5em;
+}
+
+#content {
+	width: 90%;
+	max-width: 80em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#footer {
+	bottom:0;
+	margin-top: auto;
+	border-top: 1px solid;
+	max-width: none;
+	background: #f0f0f0;
+	padding: 1em;
+}
+
+body {
+	display: flex;
+	flex-direction:column;
+	padding: 0;
+	margin: 0;
+	min-height: 100%;
+	font-family: Computer Modern Concrete, Georgia, serif;
+}
+
+table {
+	background: #eaeaea;
+	border-collapse: collapse;
+	border-radius: 5px;
+	border-bottom: 1px solid;
+	border-top: 2px solid;
+}
+
+th {
+	border-bottom: 1px solid;
+}
+
+tr {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+tbody td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+td p {
+	margin: 5px;
+	margin: 5px;
+}
+
+pre {
+	white-space: pre;
+	background: #eaeaea !important;
+	overflow-x: auto;
+	border-radius: 5px;
+	padding: 1em;
+}
+
+.MathJax_Display {
+	margin: 1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-x: auto;
+	display: block;
+}
+
+:not(pre) > code {
+	background: #eaeaea;
+	border-radius: 5px;
+}
+
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #F00 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #04D } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #00F; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #800 } /* Name.Constant */
+pre.pygments .tok-nd { color: #A2F } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #00F } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #BBB } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #00F } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="navbar">
+	<a href="index.html">CRC Home</a>
+</div>
+<div id="header">
+<h1>Differential cryptanalysis with BQN</h1>
+<div class="details">
+<span id="author" class="author">Andrea Piseri</span><br>
+<span id="email" class="email"><a href="mailto:andrea.piseri@gmail.com">andrea.piseri@gmail.com</a></span><br>
+<span id="revdate">14/10/2024</span>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>While attending an introductory lecture on cryptography last week, the
+professor guided us through an attack on a simplified
+<a href="https://en.wikipedia.org/wiki/Data_Encryption_Standard">DES cypher</a>, and
+obviously I had a BQN repl open through the whole thing. I felt that the
+equational approach that array languages propose really helped me reason
+through the problem, so here&#8217;s what I learned from it.</p>
+</div>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_cypher_description">Cypher description</a></li>
+<li><a href="#_normalizing_the_notation">Normalizing the notation</a></li>
+<li><a href="#_attacking_the_cypher">Attacking the cypher</a></li>
+<li><a href="#_equational_bqn">Equational BQN</a></li>
+</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cypher_description">Cypher description</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The cypher we attacked was a simplified version of DES, with less rounds and shorter key and blocks. The scheme is as follows:</p>
+</div>
+<div class="paragraph">
+<p>The message is split in blocks of 12 total bits. each block is processed separately, so from now on we will focus on a single block.
+Each block is split in a 6-bit left half <code>l</code> and a 6-bit right half <code>r</code>, which are then passed through 3 rounds of the following scheme:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>\(l' := r\)</p>
+</li>
+<li>
+<p>\(r' := l \oplus f(r, k)\) where \(f\) is a Feistel-style function and \(k\) is the round key.</p>
+</li>
+<li>
+<p>To compute \(f(r, k)\),</p>
+<div class="ulist">
+<ul>
+<li>
+<p>first set \(h := e(r)\) (an expansion operation from 6 to 8 bits)</p>
+</li>
+<li>
+<p>then compute \(i := h \oplus k\)</p>
+</li>
+<li>
+<p>then use \(i_{0..4}\) and \(i_{4..8}\) to index into the \(s_1, s_2\) S-boxes respectively.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If we do this for all three rounds, we get the following equations:</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\begin{align}
+&amp; l_1 := r_0 &amp; r_1 := l_0 \oplus f(r_0, k_0) \\
+&amp; l_2 := r_1 &amp; r_2 := l_1 \oplus f(r_1, k_1) \\
+&amp; l_3 := r_2 &amp; r_3 := l_2 \oplus f(r_2, k_2) \\
+\end{align}\]
+</div>
+</div>
+<div class="paragraph">
+<p>The round keys are generated by successive rotations of a single 9-bit key, so that \(k_j := k[j..j+8 \mod 9 ]\)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_normalizing_the_notation">Normalizing the notation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The first order of business is to make this abstract description executable, and as
+mentioned I used <a href="https://mlochbaum.github.io/BQN/index.html">BQN</a>. In the
+process I will also fill in the details, like the content of the S-boxes and
+what the expansion operation does precisely.
+The data representation is chosen so that</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bqn"><span></span><span class="tok-c1"># blocks are 2‿3 arrays, keys are 2‿4.</span>
+<span class="tok-nv">s</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-m">5</span><span class="tok-o">⥊</span><span class="tok-m">2</span><span class="tok-sr">)</span><span class="tok-o">⥊</span><span class="tok-p">⟨</span>
+<span class="tok-w">	</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span>
+<span class="tok-w">	</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span>
+<span class="tok-w">	</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span>
+<span class="tok-w">	</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">0</span><span class="tok-p">,</span>
+<span class="tok-p">⟩</span>
+<span class="tok-o">E</span><span class="tok-w">       </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-m">0</span><span class="tok-p">‿</span><span class="tok-m">1</span><span class="tok-p">‿</span><span class="tok-m">3</span><span class="tok-p">‿</span><span class="tok-m">2</span><span class="tok-p">,</span><span class="tok-m">3</span><span class="tok-p">‿</span><span class="tok-m">2</span><span class="tok-p">‿</span><span class="tok-m">4</span><span class="tok-p">‿</span><span class="tok-m">5</span><span class="tok-p">]</span><span class="tok-o">⊏⥊</span>
+<span class="tok-o">F</span><span class="tok-w">       </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-kt">{</span><span class="tok-nv">k</span><span class="tok-o">𝕊</span><span class="tok-nv">r</span><span class="tok-ni">:</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-nv">k</span><span class="tok-o">≠E</span><span class="tok-w"> </span><span class="tok-nv">r</span><span class="tok-sr">)</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-kt">}</span>
+<span class="tok-o">Round</span><span class="tok-w">   </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-kt">{</span><span class="tok-nv">k</span><span class="tok-o">𝕊</span><span class="tok-nv">l</span><span class="tok-p">‿</span><span class="tok-nv">r</span><span class="tok-ni">:</span><span class="tok-w"> </span><span class="tok-nv">r</span><span class="tok-o">⋈</span><span class="tok-nv">l</span><span class="tok-o">≠</span><span class="tok-nv">k</span><span class="tok-w"> </span><span class="tok-o">F</span><span class="tok-w"> </span><span class="tok-nv">r</span><span class="tok-kt">}</span>
+<span class="tok-o">Encrypt</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-kt">{</span><span class="tok-nv">k</span><span class="tok-o">𝕊</span><span class="tok-nv">l</span><span class="tok-p">‿</span><span class="tok-nv">r</span><span class="tok-ni">:</span><span class="tok-w"> </span><span class="tok-nv">l</span><span class="tok-p">‿</span><span class="tok-nv">r</span><span class="tok-w"> </span><span class="tok-o">Round</span><span class="tok-na">´</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-o">↕</span><span class="tok-m">3</span><span class="tok-sr">)(</span><span class="tok-m">2</span><span class="tok-p">‿</span><span class="tok-m">4</span><span class="tok-o">⥊⌽</span><span class="tok-sr">)</span><span class="tok-na">¨</span><span class="tok-o">&lt;</span><span class="tok-nv">k</span><span class="tok-kt">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attacking_the_cypher">Attacking the cypher</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We went through a chosen plaintext attack on the cypher, with two pairs of plaintext
+and cyphertext:</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\begin{align}
+&amp; l_0   r_0   := 000111011011 &amp; l_3   r_3   := 000011100101 \\
+&amp; l^*_0 r^*_0 := 101110011011 &amp; l^*_3 r^*_3 := 100100011000
+\end{align}\]
+</div>
+</div>
+<div class="paragraph">
+<p>using the equations above, we can rewrite:</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[\begin{align}
+r_3 \oplus r^*_3
+&amp;= l_2 \oplus l^*_2 \oplus f(r_2, k_2) \oplus f(r^*_2, k_2) \\
+&amp;= r_1 \oplus r^*_1 \oplus f(r_2, k_2) \oplus f(r^*_2, k_2) \\
+&amp;= l_0 \oplus l^*_0 \oplus f(r_0, k_0) \oplus f(r^*_0,k_0) \oplus f(r_2, k_2) \oplus f(r^*_2, k_2)
+\end{align}\]
+</div>
+</div>
+<div class="paragraph">
+<p>noting that in this specific case \(r_0 = r^*_0\) and that
+\(r^{(*)}_2 = l^{(*)}_3\), we can cancel out \(f(r_0,k_0) \oplus f(r^*_0,k_0)\)
+and obtain the equation:</p>
+</div>
+<div class="stemblock">
+<div class="content">
+\[r_3 \oplus r^*_3 \oplus l_0 \oplus l^*_0 = f(l_3, k_2) \oplus f(l^*_3, k_2)\]
+</div>
+</div>
+<div class="paragraph">
+<p>which we will be solving for \(k_2\).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_equational_bqn">Equational BQN</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We explicitly find the values of <code>k2</code> that satisfy the equation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bqn"><span></span><span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-na">´</span><span class="tok-w"> </span><span class="tok-nv">r3</span><span class="tok-p">‿</span><span class="tok-nv">r3s</span><span class="tok-p">‿</span><span class="tok-nv">l0</span><span class="tok-p">‿</span><span class="tok-nv">l0s</span>
+<span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-nv">k2</span><span class="tok-w"> </span><span class="tok-o">F</span><span class="tok-w"> </span><span class="tok-nv">l3</span><span class="tok-sr">)</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-w"> </span><span class="tok-nv">k2</span><span class="tok-w"> </span><span class="tok-o">F</span><span class="tok-w"> </span><span class="tok-nv">l3s</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>BQN is particularly useful for program manipulation because many primitives can be defined in terms of their equational
+properties, which we can use to simplify until we have a direct program to compute the solution.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bqn"><span></span><span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-sr">((</span><span class="tok-nv">k2</span><span class="tok-o">≠E</span><span class="tok-w"> </span><span class="tok-nv">l3</span><span class="tok-sr">)</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-sr">)</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-nv">k2</span><span class="tok-o">≠E</span><span class="tok-w"> </span><span class="tok-nv">l3s</span><span class="tok-sr">)</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-w">    </span><span class="tok-c1"># expand F</span>
+<span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-sr">((</span><span class="tok-m">2</span><span class="tok-o">|</span><span class="tok-nv">k2</span><span class="tok-o">+E</span><span class="tok-w"> </span><span class="tok-nv">l3</span><span class="tok-sr">)</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-sr">)</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-m">2</span><span class="tok-o">|</span><span class="tok-nv">k2</span><span class="tok-o">+E</span><span class="tok-w"> </span><span class="tok-nv">l3s</span><span class="tok-sr">)</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-w">  </span><span class="tok-c1"># ≠ on bool</span>
+<span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-nv">k2</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-sr">(</span><span class="tok-o">E</span><span class="tok-w"> </span><span class="tok-nv">l3</span><span class="tok-sr">)</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-sr">)</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-w"> </span><span class="tok-nv">k2</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-sr">(</span><span class="tok-o">E</span><span class="tok-w"> </span><span class="tok-nv">l3s</span><span class="tok-sr">)</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-w">    </span><span class="tok-c1"># ((≢s)|i+j)⊑s ←→ i⊑j⌽s</span>
+<span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-nv">k2</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-sr">((</span><span class="tok-o">E</span><span class="tok-w"> </span><span class="tok-nv">l3</span><span class="tok-sr">)</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-sr">)</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-o">E</span><span class="tok-w"> </span><span class="tok-nv">l3s</span><span class="tok-sr">)</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-w">        </span><span class="tok-c1"># ⊑˘ distributes over ≠</span>
+<span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-nv">k2</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-o">≠</span><span class="tok-na">´</span><span class="tok-sr">((</span><span class="tok-o">E</span><span class="tok-w"> </span><span class="tok-nv">l3</span><span class="tok-sr">)</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-sr">)</span><span class="tok-w"> </span><span class="tok-o">⋈</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-o">E</span><span class="tok-w"> </span><span class="tok-nv">l3s</span><span class="tok-sr">)</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-nv">s</span><span class="tok-w">      </span><span class="tok-c1"># curry ≠</span>
+<span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-o">≡</span><span class="tok-w"> </span><span class="tok-nv">k2</span><span class="tok-o">⊑</span><span class="tok-na">˘</span><span class="tok-o">≠</span><span class="tok-na">´</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-py">⟜</span><span class="tok-nv">s</span><span class="tok-na">¨</span><span class="tok-o">E</span><span class="tok-na">¨</span><span class="tok-nv">l3</span><span class="tok-p">‿</span><span class="tok-nv">l3s</span><span class="tok-w">                 </span><span class="tok-c1"># map ⌽˘⟜s and E</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the equation that lifts most of the weight of this transformation is the
+following property of
+<a href="https://mlochbaum.github.io/BQN/doc/reverse.html#rotate">Rotate</a>(<code>⌽</code>):
+<code>((≢s)|i+j)⊑s ←→ i⊑j⌽s</code>.</p>
+</div>
+<div class="paragraph">
+<p>this tells us that candidate values of the first and second half <code>k2</code> are the indices of <code>1</code>
+in the cells of <code>w</code> in the following program.
+The last line searches for these positions and stitches together the guesses for the two halves,
+giving the full list of keys.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bqn"><span></span><span class="tok-nv">m</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-na">´</span><span class="tok-nv">r3</span><span class="tok-p">‿</span><span class="tok-nv">r3s</span><span class="tok-p">‿</span><span class="tok-nv">l0</span><span class="tok-p">‿</span><span class="tok-nv">l0s</span>
+<span class="tok-nv">w</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-sr">(</span><span class="tok-o">&lt;</span><span class="tok-na">˘</span><span class="tok-nv">m</span><span class="tok-sr">)</span><span class="tok-o">≡</span><span class="tok-na">¨</span><span class="tok-o">≠</span><span class="tok-na">´</span><span class="tok-o">⌽</span><span class="tok-na">˘</span><span class="tok-py">⟜</span><span class="tok-nv">s</span><span class="tok-na">¨</span><span class="tok-o">E</span><span class="tok-na">¨</span><span class="tok-nv">l3</span><span class="tok-p">‿</span><span class="tok-nv">l3s</span>
+<span class="tok-o">&gt;⥊∾</span><span class="tok-na">⌜˝</span><span class="tok-o">/</span><span class="tok-py">⟜</span><span class="tok-sr">(</span><span class="tok-o">⥊↕</span><span class="tok-m">4</span><span class="tok-o">⥊</span><span class="tok-m">2</span><span class="tok-sr">)</span><span class="tok-na">˘</span><span class="tok-o">⥊</span><span class="tok-na">˘</span><span class="tok-nv">w</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-05-19 20:11:40 +0200
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
