@@ -344,27 +344,55 @@ then it follows that any substring ending after the letter at \(i\) must start s
 <span class="tok-w">	</span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">s</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">];</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
 <span class="tok-w">		</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">strchrnul</span><span class="tok-p">(</span><span class="tok-n">v</span><span class="tok-p">,</span><span class="tok-n">s</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">])</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">v</span><span class="tok-p">;</span>
 <span class="tok-w">		</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-n">k</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-p">;</span>
+<span class="tok-w">		</span><span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%c |%2d %2d %2d %2d %2d %2d&quot;</span><span class="tok-p">,</span><span class="tok-n">s</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">],</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">0</span><span class="tok-p">],</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">1</span><span class="tok-p">],</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">2</span><span class="tok-p">],</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">],</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">4</span><span class="tok-p">],</span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">]);</span>
 <span class="tok-w">		</span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mi">5</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
 <span class="tok-w">			</span><span class="tok-c1">// can&#39;t contain a consonant</span>
-<span class="tok-w">			</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">];</span>
+<span class="tok-w">			</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">j</span><span class="tok-p">[</span><span class="tok-mi">5</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span>
 <span class="tok-w">			</span><span class="tok-c1">// must contain all vowels</span>
-<span class="tok-w">			</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">end</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">fold_min</span><span class="tok-p">(</span><span class="tok-n">j</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">5</span><span class="tok-p">);</span>
+<span class="tok-w">			</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">end</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">fold_min</span><span class="tok-p">(</span><span class="tok-n">j</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">5</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span>
 <span class="tok-w">			</span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(;</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">end</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">begin</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">				</span><span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;%*s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">s</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-p">);</span>
+<span class="tok-w">				</span><span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot; %.*s&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">s</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-n">begin</span><span class="tok-p">);</span>
 <span class="tok-w">			</span><span class="tok-p">}</span>
 <span class="tok-w">		</span><span class="tok-p">}</span>
+<span class="tok-w">		</span><span class="tok-n">putchar</span><span class="tok-p">(</span><span class="tok-sc">&#39;\n&#39;</span><span class="tok-p">);</span>
 <span class="tok-w">	</span><span class="tok-p">}</span>
 <span class="tok-p">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>but sequential is not what we&#8217;re going for here, so what can we do? let&#8217;s write some K.</p>
+<p>We can see the values of the <code>j</code> variable track the last seen occurrence of each character class, forming this table as we scan across the
+string <code>"aeiouuaxaeiou"</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>a | 0 -1 -1 -1 -1 -1
+e | 0  1 -1 -1 -1 -1
+i | 0  1  2 -1 -1 -1
+o | 0  1  2  3 -1 -1
+u | 0  1  2  3  4 -1 aeiou
+u | 0  1  2  3  5 -1 aeiouu
+a | 6  1  2  3  5 -1 aeiouua eiouua
+x | 6  1  2  3  5  7
+a | 8  1  2  3  5  7
+e | 8  9  2  3  5  7
+i | 8  9 10  3  5  7
+o | 8  9 10 11  5  7
+u | 8  9 10 11 12  7 aeiou</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But sequential is not what we&#8217;re going for here, so what can we do? let&#8217;s write some K.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_parallel_solution">Parallel solution?</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">x</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeiouuaxaeiou&quot;</span></code></pre>
+</div>
+</div>
 <div class="paragraph">
 <p>First, we would like to <a href="https://wiki.k-language.dev/wiki/Find">classify (<code>?</code>)</a> all characters as either one of the vowels, or a consonant.
 we <a href="https://wiki.k-language.dev/wiki/Concatenate">prepend (<code>,</code>)</a> one element for each of the character classes for good measure, we&#8217;ll see later how that
@@ -373,6 +401,11 @@ helps.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">class</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-s2">&quot;aeiou&quot;</span><span class="tok-o">?</span><span class="tok-s2">&quot;aeiouz&quot;</span><span class="tok-o">,</span><span class="tok-n">x</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>0 1 2 3 4 0N 0 1 2 3 4 4 0 0N 0 1 2 3 4</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -384,6 +417,20 @@ Remember the first five position lists are for the vowels, the last is for the c
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-nv">occurrences</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-il">6</span><span class="tok-o">+.=</span><span class="tok-n">class</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>this is like a compressed version of the table we produced in the C implementation, it only stores the positions at which each column
+changes value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>(-6 0 6 8
+ -5 1 9
+ -4 2 10
+ -3 3 11
+ -2 4 5 12
+ -1 7)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -399,8 +446,8 @@ the vowels are.</p>
 <p>For each end position, we want to find the position where the closest previous element of each class is.
 We can do this by <a href="https://wiki.k-language.dev/wiki/Binary_search">binary searching (<code>'</code>)</a> all of the end
 positions in <a href="https://wiki.k-language.dev/wiki/Each_left">each (<code>\:</code>)</a> of the occurrence lists,
-which should be a \(O(m * log n)\) operation, however a smart interpreter could do it in
-\(O(m + log n)\) given that the list of end points is sorted, so I&#8217;m going to say that&#8217;s the
+which should be a \(O(n \log m)\) operation, however a smart interpreter could do it in
+\(O(n + \log m)\) given that the list of end points is sorted, so I&#8217;m going to say that&#8217;s the
 complexity of this step. Remember those sentinel values we added at the beginning? they make sure the search
 always succeeds, and the very first consonant occurs at position -1.</p>
 </div>
@@ -410,15 +457,34 @@ always succeeds, and the very first consonant occurs at position -1.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now the first valid position to begin a substring is right after the previous occurrence of a consonant,
-and the first invalid position is right after the <a href="https://wiki.k-language.dev/wiki/Min">minimum (<code>&amp;</code>)</a> of the previous
-occurrences for the vowels. We <a href="https://wiki.k-language.dev/wiki/Enum">enumerate (<code>!</code>)</a> the valid beginning positions
-for a vowel substring, then we construct the ranges explicitly and use them to index into the original array.</p>
+<p>We have effectively expanded the table from before, only in transposed format and sampled at the positions of the vowels.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> 0  0  0  0  0  0  6  8  8  8  8  8
+-5  1  1  1  1  1  1  1  9  9  9  9
+-4 -4  2  2  2  2  2  2  2 10 10 10
+-3 -3 -3  3  3  3  3  3  3  3 11 11
+-2 -2 -2 -2  4  5  5  5  5  5  5 12
+-1 -1 -1 -1 -1 -1 -1  7  7  7  7  7</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the first valid position to begin a substring so that it contains no
+consonants is right after the previous occurrence of a consonant, and the
+position after which a substring would not contain all vowels is right after
+the <a href="https://wiki.k-language.dev/wiki/Min">minimum (<code>&amp;</code>)</a> of the previous
+occurrences for the vowels. We separate the first five rows from the last with
+a <a href="https://wiki.k-language.dev/wiki/Cut">cut (<code>_</code>)</a> and the hard work is
+done, we just need to build up the results. We
+<a href="https://wiki.k-language.dev/wiki/Enum">enumerate (<code>!</code>)</a> the valid
+beginning positions for a vowel substring, then we construct the ranges
+explicitly and use them to index into the original array.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-p">(</span><span class="tok-n">vowel</span><span class="tok-p">;</span><span class="tok-o">,</span><span class="tok-n">consonant</span><span class="tok-p">)</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">0</span><span class="tok-w"> </span><span class="tok-il">5</span><span class="tok-o">_</span><span class="tok-n">previous</span>
-<span class="tok-nv">begins</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">consonant</span><span class="tok-o">+!&#39;</span><span class="tok-p">(</span><span class="tok-il">1</span><span class="tok-o">+&amp;/</span><span class="tok-n">vowel</span><span class="tok-p">)</span><span class="tok-o">-</span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">consonant</span>
+<span class="tok-nv">begins</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">consonant</span><span class="tok-o">+!&#39;</span><span class="tok-il">0</span><span class="tok-o">|</span><span class="tok-p">(</span><span class="tok-il">1</span><span class="tok-o">+&amp;/</span><span class="tok-n">vowel</span><span class="tok-p">)</span><span class="tok-o">-</span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">consonant</span>
 <span class="tok-nv">substrings</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-n">x</span><span class="tok-o">+!</span><span class="tok-n">y</span><span class="tok-o">-</span><span class="tok-n">x</span><span class="tok-p">}</span><span class="tok-o">.&#39;,/</span><span class="tok-n">begins</span><span class="tok-o">,&#39;&#39;</span><span class="tok-n">ends</span><span class="tok-o">+</span><span class="tok-il">1</span></code></pre>
 </div>
 </div>
@@ -445,7 +511,7 @@ for a vowel substring, then we construct the ranges explicitly and use them to i
 <div class="paragraph">
 <p>Ok, the k interpreter I wrote this for is completely sequential, but all operations I described can be implemented in parallel with
 techniques such as simple work batching for arithmetic, binary searching and classifying, and parallel gather operations for the calls to
-<code>where</code> and <code>group</code> (the key set is known and small), so that the entire thing (without the very last step of building all of
+<code>where</code> and <code>group</code> <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup>, so that the entire thing (without the very last step of building all of
 the substrings) could be implemented very efficiently on a GPU. K lets me iterate about parallel algorithms quickly and easily,
 because most of its primitive operations are just very simple parallel algorithms.</p>
 </div>
@@ -457,10 +523,13 @@ because most of its primitive operations are just very simple parallel algorithm
 <div class="footnote" id="_footnotedef_1">
 <a href="#_footnoteref_1">1</a>. I&#8217;m going to assume the string is lowercase and will use the word "consonant" to mean any non-vowel character
 </div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. the key set is known and small
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-19 20:18:33 +0200
+Last updated 2026-05-20 11:59:50 +0200
 </div>
 </div>
 <script type="text/x-mathjax-config">

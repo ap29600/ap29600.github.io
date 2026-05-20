@@ -79,22 +79,48 @@ void substrings(char const *s) {
 	for (int i = 0; s[i]; ++i) {
 		int k = strchrnul(v,s[i]) - v;
 		j[k] = i;
+		printf("%c |%2d %2d %2d %2d %2d %2d",s[i],j[0],j[1],j[2],j[3],j[4],j[5]);
 		if (k < 5) {
 			// can't contain a consonant
-			int begin = j[5];
+			int begin = j[5] + 1;
 			// must contain all vowels
-			int end = fold_min(j, 5);
+			int end = fold_min(j, 5) + 1;
 			for (; begin < end; ++begin) {
-				printf("%*s\n", i + 1 - begin, s + begin);
+				printf(" %.*s", i + 1 - begin, s + begin);
 			}
 		}
+		putchar('\n');
 	}
 }
 ----
 
-but sequential is not what we're going for here, so what can we do? let's write some K.
+We can see the values of the `j` variable track the last seen occurrence of each character class, forming this table as we scan across the
+string `"aeiouuaxaeiou"`.
+
+----
+a | 0 -1 -1 -1 -1 -1
+e | 0  1 -1 -1 -1 -1
+i | 0  1  2 -1 -1 -1
+o | 0  1  2  3 -1 -1
+u | 0  1  2  3  4 -1 aeiou
+u | 0  1  2  3  5 -1 aeiouu
+a | 6  1  2  3  5 -1 aeiouua eiouua
+x | 6  1  2  3  5  7
+a | 8  1  2  3  5  7
+e | 8  9  2  3  5  7
+i | 8  9 10  3  5  7
+o | 8  9 10 11  5  7
+u | 8  9 10 11 12  7 aeiou
+----
+
+But sequential is not what we're going for here, so what can we do? let's write some K.
 
 == Parallel solution?
+
+[source,k]
+----
+x: "aeiouuaxaeiou"
+----
 
 First, we would like to link:https://wiki.k-language.dev/wiki/Find[classify (``?``)] all characters as either one of the vowels, or a consonant.
 we link:https://wiki.k-language.dev/wiki/Concatenate[prepend (``,``)] one element for each of the character classes for good measure, we'll see later how that
@@ -103,6 +129,9 @@ helps.
 [source,k]
 ----
 class: "aeiou"?"aeiouz",x
+----
+----
+0 1 2 3 4 0N 0 1 2 3 4 4 0 0N 0 1 2 3 4
 ----
 
 Then we link:https://wiki.k-language.dev/wiki/Group[make a dictionary (``=``)] out of that, so that we have the sorted list of 
@@ -113,6 +142,18 @@ Remember the first five position lists are for the vowels, the last is for the c
 [source,k]
 ----
 occurrences: -6+.=class
+----
+
+this is like a compressed version of the table we produced in the C implementation, it only stores the positions at which each column
+changes value.
+
+----
+(-6 0 6 8
+ -5 1 9
+ -4 2 10
+ -3 3 11
+ -2 4 5 12
+ -1 7)
 ----
 
 Now we find all the candidate end positions: they're just the positions link:https://wiki.k-language.dev/wiki/Where[where (``&``)] 
@@ -126,8 +167,8 @@ end: &~^6_class
 For each end position, we want to find the position where the closest previous element of each class is.
 We can do this by link:https://wiki.k-language.dev/wiki/Binary_search[binary searching (``'``)] all of the end 
 positions in link:https://wiki.k-language.dev/wiki/Each_left[each (``\:``)] of the occurrence lists,
-which should be a stem:[O(m * log n)] operation, however a smart interpreter could do it in
-stem:[O(m + log n)] given that the list of end points is sorted, so I'm going to say that's the 
+which should be a stem:[O(n \log m)] operation, however a smart interpreter could do it in
+stem:[O(n + \log m)] given that the list of end points is sorted, so I'm going to say that's the 
 complexity of this step. Remember those sentinel values we added at the beginning? they make sure the search
 always succeeds, and the very first consonant occurs at position -1.
 
@@ -136,18 +177,34 @@ always succeeds, and the very first consonant occurs at position -1.
 previous: occurrences {x@x'y}\: end
 ----
 
-Now the first valid position to begin a substring is right after the previous occurrence of a consonant,
-and the first invalid position is right after the link:https://wiki.k-language.dev/wiki/Min[minimum (``&``)] of the previous
-occurrences for the vowels. We link:https://wiki.k-language.dev/wiki/Enum[enumerate (``!``)] the valid beginning positions
-for a vowel substring, then we construct the ranges explicitly and use them to index into the original array.
+We have effectively expanded the table from before, only in transposed format and sampled at the positions of the vowels.
+
+----
+ 0  0  0  0  0  0  6  8  8  8  8  8
+-5  1  1  1  1  1  1  1  9  9  9  9
+-4 -4  2  2  2  2  2  2  2 10 10 10
+-3 -3 -3  3  3  3  3  3  3  3 11 11
+-2 -2 -2 -2  4  5  5  5  5  5  5 12
+-1 -1 -1 -1 -1 -1 -1  7  7  7  7  7
+----
+
+Now the first valid position to begin a substring so that it contains no
+consonants is right after the previous occurrence of a consonant, and the
+position after which a substring would not contain all vowels is right after
+the link:https://wiki.k-language.dev/wiki/Min[minimum (``&``)] of the previous
+occurrences for the vowels. We separate the first five rows from the last with
+a link:https://wiki.k-language.dev/wiki/Cut[cut (``_``)] and the hard work is
+done, we just need to build up the results. We
+link:https://wiki.k-language.dev/wiki/Enum[enumerate (``!``)] the valid
+beginning positions for a vowel substring, then we construct the ranges
+explicitly and use them to index into the original array.
 
 [source,k]
 ----
 (vowel;,consonant): 0 5_previous
-begins: 1+consonant+!'(1+&/vowel)-1+consonant
+begins: 1+consonant+!'0|(1+&/vowel)-1+consonant
 substrings: x@ {x+!y-x}.',/begins,''ends+1
 ----
-
 
 A couple of simplifications later our solution becomes:
 
@@ -167,6 +224,6 @@ A couple of simplifications later our solution becomes:
 
 Ok, the k interpreter I wrote this for is completely sequential, but all operations I described can be implemented in parallel with
 techniques such as simple work batching for arithmetic, binary searching and classifying, and parallel gather operations for the calls to 
-``where`` and ``group`` (the key set is known and small), so that the entire thing (without the very last step of building all of
+``where`` and ``group`` footnote:[the key set is known and small], so that the entire thing (without the very last step of building all of
 the substrings) could be implemented very efficiently on a GPU. K lets me iterate about parallel algorithms quickly and easily, 
 because most of its primitive operations are just very simple parallel algorithms.
