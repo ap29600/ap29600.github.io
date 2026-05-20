@@ -215,7 +215,7 @@ A couple of simplifications later our solution becomes:
  occurrences: -6+.=class
  ends: &~^6_class
  (vowel;,consonant): 0 5_ occurrences {1+x@x'y}\: ends
- begins: consonant+!'(&/vowel)-consonant
+ begins: consonant+!'0|(&/vowel)-consonant
  : x@ {x+!y-x}.',/begins,''ends+1
 }
 ----

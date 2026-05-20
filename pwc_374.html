@@ -498,7 +498,7 @@ explicitly and use them to index into the original array.</p>
 <span class="tok-w"> </span><span class="tok-nv">occurrences</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-il">6</span><span class="tok-o">+.=</span><span class="tok-n">class</span>
 <span class="tok-w"> </span><span class="tok-nv">ends</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-o">&amp;~^</span><span class="tok-il">6</span><span class="tok-o">_</span><span class="tok-n">class</span>
 <span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">vowel</span><span class="tok-p">;</span><span class="tok-o">,</span><span class="tok-n">consonant</span><span class="tok-p">)</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-il">0</span><span class="tok-w"> </span><span class="tok-il">5</span><span class="tok-o">_</span><span class="tok-w"> </span><span class="tok-n">occurrences</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-il">1</span><span class="tok-o">+</span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-n">x</span><span class="tok-o">&#39;</span><span class="tok-n">y</span><span class="tok-p">}</span><span class="tok-o">\:</span><span class="tok-w"> </span><span class="tok-n">ends</span>
-<span class="tok-w"> </span><span class="tok-nv">begins</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">consonant</span><span class="tok-o">+!&#39;</span><span class="tok-p">(</span><span class="tok-o">&amp;/</span><span class="tok-n">vowel</span><span class="tok-p">)</span><span class="tok-o">-</span><span class="tok-nv">consonant</span>
+<span class="tok-w"> </span><span class="tok-nv">begins</span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">consonant</span><span class="tok-o">+!&#39;</span><span class="tok-il">0</span><span class="tok-o">|</span><span class="tok-p">(</span><span class="tok-o">&amp;/</span><span class="tok-n">vowel</span><span class="tok-p">)</span><span class="tok-o">-</span><span class="tok-nv">consonant</span>
 <span class="tok-w"> </span><span class="tok-o">:</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-o">@</span><span class="tok-w"> </span><span class="tok-p">{</span><span class="tok-n">x</span><span class="tok-o">+!</span><span class="tok-n">y</span><span class="tok-o">-</span><span class="tok-n">x</span><span class="tok-p">}</span><span class="tok-o">.&#39;,/</span><span class="tok-n">begins</span><span class="tok-o">,&#39;&#39;</span><span class="tok-n">ends</span><span class="tok-o">+</span><span class="tok-il">1</span>
 <span class="tok-p">}</span></code></pre>
 </div>
@@ -529,7 +529,7 @@ because most of its primitive operations are just very simple parallel algorithm
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-20 11:59:50 +0200
+Last updated 2026-05-20 12:01:37 +0200
 </div>
 </div>
 <script type="text/x-mathjax-config">
