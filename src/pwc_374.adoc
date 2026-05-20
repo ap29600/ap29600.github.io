@@ -54,7 +54,7 @@ For the reader in a hurry, if you're only interested in good and readable soluti
 
 ``({~|/(|/^?)/'1|:\(x;"aeiou")}')#,/,\'|',\|:`` keeps from all substrings only those for which the predicate is true.
 
-Not exactly rocket surgery, but it works. Now for solving the problem efficiently, which is the actually fun challenge:
+Not really sophisticated, but it works. Now for solving the problem efficiently, which is the actually fun challenge:
 
 == Better solution
 
