@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg height='188pt' preserveAspectRatio='xMidYMid meet' viewBox='0.00 0.00 1032.00 188.00' width='1032pt' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'>
+<g class='graph' id='graph0' transform='scale(1 1) rotate(0) translate(4 184)'>
+<title>G</title>
+<polygon fill='white' points='-4,4 -4,-184 1028,-184 1028,4 -4,4' stroke='none'/>
+<g class='cluster' id='clust2'>
+<title>cluster_f0</title>
+<polygon fill='none' points='136,-64 136,-116 350,-116 350,-64 136,-64' stroke='blue'/>
+</g>
+<g class='cluster' id='clust4'>
+<title>cluster_f1</title>
+<polygon fill='none' points='358,-64 358,-116 572,-116 572,-64 358,-64' stroke='blue'/>
+</g>
+<g class='cluster' id='clust6'>
+<title>cluster_f2</title>
+<polygon fill='none' points='580,-64 580,-116 794,-116 794,-64 580,-64' stroke='blue'/>
+</g>
+<g class='cluster' id='clust8'>
+<title>cluster_f3</title>
+<polygon fill='none' points='802,-64 802,-116 1016,-116 1016,-64 802,-64' stroke='blue'/>
+</g>
+
+
+<g class='node' id='node18'>
+<title>x</title>
+<polygon fill='none' points='54,-108 0,-108 0,-72 54,-72 54,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='27' y='-83.83'>⍺</text>
+</g>
+
+
+<g class='node' id='node2'>
+<title>y0</title>
+<polygon fill='none' points='270,-180 216,-180 216,-144 270,-144 270,-180' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='243' y='-156.95'>⍵[0]</text>
+</g>
+
+<g class='node' id='node7'>
+<title>f0</title>
+<polygon fill='none' points='270,-108 216,-108 216,-72 270,-72 270,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='243' y='-84.95'>f</text>
+</g>
+
+<g class='edge' id='edge15'>
+<title>y0&#45;&gt;f0</title>
+<path d='M243,-143.7C243,-136.41 243,-127.73 243,-119.54' fill='none' stroke='black'/>
+<polygon fill='black' points='246.5,-119.62 243,-109.62 239.5,-119.62 246.5,-119.62' stroke='black'/>
+</g>
+
+<g class='node' id='node3'>
+<title>y1</title>
+<polygon fill='none' points='492,-180 438,-180 438,-144 492,-144 492,-180' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='465' y='-156.95'>⍵[1]</text>
+</g>
+
+<g class='node' id='node10'>
+<title>f1</title>
+<polygon fill='none' points='492,-108 438,-108 438,-72 492,-72 492,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='465' y='-84.95'>f</text>
+</g>
+
+<g class='edge' id='edge16'>
+<title>y1&#45;&gt;f1</title>
+<path d='M465,-143.7C465,-136.41 465,-127.73 465,-119.54' fill='none' stroke='black'/>
+<polygon fill='black' points='468.5,-119.62 465,-109.62 461.5,-119.62 468.5,-119.62' stroke='black'/>
+</g>
+
+<g class='node' id='node4'>
+<title>y2</title>
+<polygon fill='none' points='714,-180 660,-180 660,-144 714,-144 714,-180' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='687' y='-156.95'>⍵[2]</text>
+</g>
+
+<g class='node' id='node13'>
+<title>f2</title>
+<polygon fill='none' points='714,-108 660,-108 660,-72 714,-72 714,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='687' y='-84.95'>f</text>
+</g>
+
+<g class='edge' id='edge17'>
+<title>y2&#45;&gt;f2</title>
+<path d='M687,-143.7C687,-136.41 687,-127.73 687,-119.54' fill='none' stroke='black'/>
+<polygon fill='black' points='690.5,-119.62 687,-109.62 683.5,-119.62 690.5,-119.62' stroke='black'/>
+</g>
+
+<g class='node' id='node5'>
+<title>y3</title>
+<polygon fill='none' points='936,-180 882,-180 882,-144 936,-144 936,-180' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='909' y='-156.95'>⍵[3]</text>
+</g>
+
+<g class='node' id='node16'>
+<title>f3</title>
+<polygon fill='none' points='936,-108 882,-108 882,-72 936,-72 936,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='909' y='-84.95'>f</text>
+</g>
+
+<g class='edge' id='edge18'>
+<title>y3&#45;&gt;f3</title>
+<path d='M909,-143.7C909,-136.41 909,-127.73 909,-119.54' fill='none' stroke='black'/>
+<polygon fill='black' points='912.5,-119.62 909,-109.62 905.5,-119.62 912.5,-119.62' stroke='black'/>
+</g>
+
+<g class='node' id='node6'>
+<title>gm_1</title>
+<polygon fill='none' points='198,-108 144,-108 144,-72 198,-72 198,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='171' y='-86.45'>g⁻¹</text>
+</g>
+
+<g class='edge' id='edge3'>
+<title>gm_1&#45;&gt;f0</title>
+<path d='M198.28,-90C200.28,-90 202.28,-90 204.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='204.24,-93.5 214.24,-90 204.24,-86.5 204.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node8'>
+<title>g0</title>
+<polygon fill='none' points='342,-108 288,-108 288,-72 342,-72 342,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='315' y='-84.95'>g</text>
+</g>
+
+<g class='edge' id='edge4'>
+<title>f0&#45;&gt;g0</title>
+<path d='M270.28,-90C272.28,-90 274.28,-90 276.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='276.24,-93.5 286.24,-90 276.24,-86.5 276.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node9'>
+<title>gm0</title>
+<polygon fill='none' points='420,-108 366,-108 366,-72 420,-72 420,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='393' y='-86.45'>g⁻¹</text>
+</g>
+
+<g class='edge' id='edge5'>
+<title>g0&#45;&gt;gm0</title>
+<path d='M342.42,-90C346.43,-90 350.44,-90 354.44,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='354.22,-93.5 364.22,-90 354.22,-86.5 354.22,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node21'>
+<title>r0</title>
+<polygon fill='none' points='342,-36 288,-36 288,0 342,0 342,-36' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='315' y='-12.95'>r[0]</text>
+</g>
+
+<g class='edge' id='edge20'>
+<title>g0&#45;&gt;r0</title>
+<path d='M315,-71.7C315,-64.41 315,-55.73 315,-47.54' fill='none' stroke='black'/>
+<polygon fill='black' points='318.5,-47.62 315,-37.62 311.5,-47.62 318.5,-47.62' stroke='black'/>
+</g>
+
+<g class='edge' id='edge6'>
+<title>gm0&#45;&gt;f1</title>
+<path d='M420.28,-90C422.28,-90 424.28,-90 426.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='426.24,-93.5 436.24,-90 426.24,-86.5 426.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node11'>
+<title>g1</title>
+<polygon fill='none' points='564,-108 510,-108 510,-72 564,-72 564,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='537' y='-84.95'>g</text>
+</g>
+
+<g class='edge' id='edge7'>
+<title>f1&#45;&gt;g1</title>
+<path d='M492.28,-90C494.28,-90 496.28,-90 498.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='498.24,-93.5 508.24,-90 498.24,-86.5 498.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node12'>
+<title>gm1</title>
+<polygon fill='none' points='642,-108 588,-108 588,-72 642,-72 642,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='615' y='-86.45'>g⁻¹</text>
+</g>
+
+<g class='edge' id='edge8'>
+<title>g1&#45;&gt;gm1</title>
+<path d='M564.42,-90C568.43,-90 572.44,-90 576.44,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='576.22,-93.5 586.22,-90 576.22,-86.5 576.22,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node22'>
+<title>r1</title>
+<polygon fill='none' points='564,-36 510,-36 510,0 564,0 564,-36' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='537' y='-12.95'>r[1]</text>
+</g>
+
+<g class='edge' id='edge21'>
+<title>g1&#45;&gt;r1</title>
+<path d='M537,-71.7C537,-64.41 537,-55.73 537,-47.54' fill='none' stroke='black'/>
+<polygon fill='black' points='540.5,-47.62 537,-37.62 533.5,-47.62 540.5,-47.62' stroke='black'/>
+</g>
+
+<g class='edge' id='edge9'>
+<title>gm1&#45;&gt;f2</title>
+<path d='M642.28,-90C644.28,-90 646.28,-90 648.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='648.24,-93.5 658.24,-90 648.24,-86.5 648.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node14'>
+<title>g2</title>
+<polygon fill='none' points='786,-108 732,-108 732,-72 786,-72 786,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='759' y='-84.95'>g</text>
+</g>
+
+<g class='edge' id='edge10'>
+<title>f2&#45;&gt;g2</title>
+<path d='M714.28,-90C716.28,-90 718.28,-90 720.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='720.24,-93.5 730.24,-90 720.24,-86.5 720.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node15'>
+<title>gm2</title>
+<polygon fill='none' points='864,-108 810,-108 810,-72 864,-72 864,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='837' y='-86.45'>g⁻¹</text>
+</g>
+
+<g class='edge' id='edge11'>
+<title>g2&#45;&gt;gm2</title>
+<path d='M786.42,-90C790.43,-90 794.44,-90 798.44,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='798.22,-93.5 808.22,-90 798.22,-86.5 798.22,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node23'>
+<title>r2</title>
+<polygon fill='none' points='786,-36 732,-36 732,0 786,0 786,-36' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='759' y='-12.95'>r[2]</text>
+</g>
+
+<g class='edge' id='edge22'>
+<title>g2&#45;&gt;r2</title>
+<path d='M759,-71.7C759,-64.41 759,-55.73 759,-47.54' fill='none' stroke='black'/>
+<polygon fill='black' points='762.5,-47.62 759,-37.62 755.5,-47.62 762.5,-47.62' stroke='black'/>
+</g>
+
+<g class='edge' id='edge12'>
+<title>gm2&#45;&gt;f3</title>
+<path d='M864.28,-90C866.28,-90 868.28,-90 870.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='870.24,-93.5 880.24,-90 870.24,-86.5 870.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node17'>
+<title>g3</title>
+<polygon fill='none' points='1008,-108 954,-108 954,-72 1008,-72 1008,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='981' y='-84.95'>g</text>
+</g>
+
+<g class='edge' id='edge13'>
+<title>f3&#45;&gt;g3</title>
+<path d='M936.28,-90C938.28,-90 940.28,-90 942.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='942.24,-93.5 952.24,-90 942.24,-86.5 942.24,-93.5' stroke='black'/>
+</g>
+
+<g class='node' id='node24'>
+<title>r3</title>
+<polygon fill='none' points='1008,-36 954,-36 954,0 1008,0 1008,-36' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='981' y='-12.95'>r[3]</text>
+</g>
+
+<g class='edge' id='edge23'>
+<title>g3&#45;&gt;r3</title>
+<path d='M981,-71.7C981,-64.41 981,-55.73 981,-47.54' fill='none' stroke='black'/>
+<polygon fill='black' points='984.5,-47.62 981,-37.62 977.5,-47.62 984.5,-47.62' stroke='black'/>
+</g>
+
+<g class='node' id='node19'>
+<title>g_1</title>
+<polygon fill='none' points='126,-108 72,-108 72,-72 126,-72 126,-108' stroke='black'/>
+<text font-family='Times,serif' font-size='14.00' xml:space='preserve' text-anchor='middle' x='99' y='-84.95'>g</text>
+</g>
+
+<g class='edge' id='edge1'>
+<title>x&#45;&gt;g_1</title>
+<path d='M54.28,-90C56.28,-90 58.28,-90 60.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='60.24,-93.5 70.24,-90 60.24,-86.5 60.24,-93.5' stroke='black'/>
+</g>
+
+<g class='edge' id='edge2'>
+<title>g_1&#45;&gt;gm_1</title>
+<path d='M126.28,-90C128.28,-90 130.28,-90 132.29,-90' fill='none' stroke='black'/>
+<polygon fill='black' points='132.24,-93.5 142.24,-90 132.24,-86.5 132.24,-93.5' stroke='black'/>
+</g>
+
+
+</g>
+</svg>
