@@ -9,3 +9,4 @@
 * link:differential_cryptanalysis_with_bqn.html[Differential Cryptanalysis with BQN]
 * link:code_report_performance_golf.html[on a Code Report performance golf]: That one time I got mad at youtube UI and wrote a blog post out of spite.
 * link:pwc_374.html[The Weekly Challenge 374]
+* link:boolean_scans.html[Symmetries in boolean scans]: deriving and using functional equations to reduce interpreter code size

@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.26">
+<meta name="author" content="Andrea Piseri">
+<title>Symmetries in boolean scans</title>
+<style>
+@charset "UTF-8";
+
+@import "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/fonts.css";
+
+@font-face {
+	font-family: Courier APL;
+	src: url("resources/CourierFzrAPL-Regular.ttf");
+}
+
+html {
+	background: #f7f7f7;
+	color: #282828;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+#navbar {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	background: #eaeaea;
+}
+
+#header {
+	padding-top: 1px;
+	margin-top: -1px;
+	text-align: center;
+	.details {
+		display: flex;
+		flex-flow: row;
+		max-width: fit-content;
+		margin-left:auto;
+		margin-right:auto;
+		br + span::before {
+			margin: 1em;
+			content: "-";
+		}
+	}
+	width: none;
+	background: #eaeaea;
+	border-bottom: 1px solid;
+}
+
+#toc {
+	border-bottom: 1px solid;
+	padding-bottom:0.5em;
+}
+
+#content {
+	width: 90%;
+	max-width: 80em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#footer {
+	bottom:0;
+	margin-top: auto;
+	border-top: 1px solid;
+	max-width: none;
+	background: #f0f0f0;
+	padding: 1em;
+}
+
+body {
+	display: flex;
+	flex-direction:column;
+	padding: 0;
+	margin: 0;
+	min-height: 100%;
+	font-family: Computer Modern Concrete, Georgia, serif;
+}
+
+table {
+	background: #eaeaea;
+	border-collapse: collapse;
+	border-radius: 5px;
+	border-bottom: 1px solid;
+	border-top: 2px solid;
+}
+
+th {
+	border-bottom: 1px solid;
+}
+
+tr {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+tbody td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+td p {
+	margin: 5px;
+	margin: 5px;
+}
+
+pre {
+	white-space: pre;
+	background: #eaeaea !important;
+	overflow-x: auto;
+	border-radius: 5px;
+	padding: 1em;
+}
+
+pre, code {
+	font-family: Courier APL;
+}
+
+.MathJax_Display {
+	margin: 1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	overflow-x: auto;
+	display: block;
+}
+
+:not(pre) > code {
+	background: #eaeaea;
+	border-radius: 5px;
+}
+
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #F00 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #04D } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #00F; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #800 } /* Name.Constant */
+pre.pygments .tok-nd { color: #A2F } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #00F } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #BBB } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #00F } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article">
+<div id="navbar">
+	<a href="index.html">CRC Home</a>
+</div>
+<div id="header">
+<h1>Symmetries in boolean scans</h1>
+<div class="details">
+<span id="author" class="author">Andrea Piseri</span><br>
+<span id="email" class="email"><a href="mailto:andrea.piseri@gmail.com">andrea.piseri@gmail.com</a></span><br>
+<span id="revdate">26/08/2026</span>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Array languages like APL are famous for using many pretty squiggles for
+representing built-in functions. These are called "primitives" and are
+different from user-defined functions, because the interpreters know about them
+and can do fancy optimizations with them, like recognizing special combinations
+<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>.</p>
+</div>
+<div class="paragraph">
+<p>APL programmers have come to rely on these optimizations, for example the
+vectorization of some combinations like <code>+/</code> (sum). if you were to feed your
+typical APL interpreter the function <code>{⍺+⍵}/</code> - which is functionally
+equivalent to <code>+/</code> <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> since <code>{⍺+⍵}</code> is
+just a dfn <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup> over <code>+</code> - the
+interpreter would execute it much slower, not just because executing the
+abstraction does two function calls per element (one for the dfn, one for the
+primitive <code>+</code>) but because it does any at all.</p>
+</div>
+<div class="paragraph">
+<p>Any respectable APL has a tight loop implemented in native code dedicated to
+this exact combination, which is why APL can sometimes compete with languages
+that compile to native code.</p>
+</div>
+</div>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_scans_and_folds">Scans and folds</a></li>
+<li><a href="#_algorithmic_esoterica">Algorithmic esoterica</a></li>
+<li><a href="#_case_study_resolving_quotes">Case study: Resolving quotes</a></li>
+<li><a href="#_boolean_scans_how_many_do_we_really_need">Boolean scans: how many do we really need?</a></li>
+<li><a href="#_scan_composition_rules">Scan composition rules</a></li>
+<li><a href="#_truth_table_shuffles">Truth table shuffles</a></li>
+<li><a href="#_conclusion">Conclusion</a></li>
+<li><a href="#_appendix_a_brainstorming_and_observations">Appendix A. Brainstorming and observations</a>
+<ul class="sectlevel2">
+<li><a href="#_truth_tables_as_finite_state_machines">Truth tables as finite state machines</a></li>
+<li><a href="#_invariants_under_the_given_transformations">Invariants under the given transformations</a></li>
+</ul>
+</li>
+<li><a href="#_appendix_b_efficient_implementation_of_boolean_scans">Appendix B. Efficient implementation of boolean scans</a>
+<ul class="sectlevel2">
+<li><a href="#_xor">Xor</a></li>
+<li><a href="#_and">And</a></li>
+<li><a href="#_less_than">Less-than</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scans_and_folds">Scans and folds</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>fold</code> is a higher order function generalizing the concept of iterating over
+an ordered collection repeatedly calling a binary function that takes as
+inputs an accumulator and an element of the collection, and returns a new
+accumulator.</p>
+</li>
+<li>
+<p><code>scan</code> is the same, but instead of returning the final value of the
+accumulator it returns a collection of all intermediate values the
+accumulator took over the course of the iteration.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In both cases an initial value may or may not be provided, and in the second
+case the first element is treated as an initial value, and is returned
+unchanged, concatenated with the scan of the rest of the collection.</p>
+</div>
+<div class="paragraph">
+<p>APL <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>
+represents these functions with the operators <code>/</code> and <code>\</code>, so that</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>       10 = +/ 1 2 3 4
+ 1 3 6 10 = +\ 1 2 3 4</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the rest of this article, I&#8217;ll be using APL to write some functional equations.
+The main ones will be translated to Haskell for readers who aren&#8217;t
+comfortable reading APL.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_algorithmic_esoterica">Algorithmic esoterica</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When I say APLers rely on these, I really mean it! scans, folds, reverse scans,
+with the operators min, max, plus, times are all familiar, if not even routine
+operations for the average python programmer who is comfortable with numpy,
+because they really are useful.</p>
+</div>
+<div class="paragraph">
+<p>Folding (from the right) with subtraction gives an alternating sum, that&#8217;s cute.</p>
+</div>
+<div class="paragraph">
+<p>APL programs go beyond that. What does scanning with the less-than function do?
+scanning with not-equal? folding with&#8230;&#8203; modulo? <sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>The issue here is that APL needs escape hatches to handle data dependencies in
+algorithms, both because it&#8217;s syntactically awkward to write loops and because
+explicitly iterating over an array in APL is mind-numbingly slow when compared
+to the speed at which the primitive functions run.
+Scans and folds are a very general way to accumulate information and "move it
+around" in the array, and they&#8217;re APL&#8217;s most idiomatic way to do so.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_study_resolving_quotes">Case study: Resolving quotes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>say you have a string of text containing quote characters, and you want to tell
+which positions in the string are inside a pair of quotes or not: if you were to
+write that in C you&#8217;d do something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">bool</span><span class="tok-w"> </span><span class="tok-n">in_quotes</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-nb">false</span><span class="tok-p">;</span>
+<span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">string</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-sc">&#39;&quot;&#39;</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">        </span><span class="tok-n">in_quotes</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-o">!</span><span class="tok-n">in_quotes</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>while in APL you would write the following, where the result is an array containing the values of
+<code>in_quotes</code> from the previous example. The idea is to scan over the boolean results from comparing
+each character in the string with the <code>"</code> character.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-nv">in_quotes</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">≠</span><span class="tok-na">\</span><span class="tok-nv">string</span><span class="tok-o">=</span><span class="tok-s1">&#39;&quot;&#39;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see why this works, let&#8217;s make the C version branchless by encoding the <code>if</code> statement
+into arithmetic; to make the similarity more apparent we can write <code>!=</code> where ordinarily
+<code>^</code> would be more natural, on the values <code>0</code> and <code>1</code> they do the same thing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">bool</span><span class="tok-w"> </span><span class="tok-n">in_quotes</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-nb">false</span><span class="tok-p">;</span>
+<span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-n">in_quotes</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">in_quotes</span><span class="tok-w"> </span><span class="tok-o">!=</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">string</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-sc">&#39;&quot;&#39;</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_boolean_scans_how_many_do_we_really_need">Boolean scans: how many do we really need?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>APL has a lot of primitives. it&#8217;s the only language I know of which has all non-trivial binary
+boolean functions built in: here they are, next to their truth tables.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 8.3333%;">
+<col style="width: 58.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3333%;">
+<col style="width: 8.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Common name</th>
+<th class="tableblock halign-left valign-top">00</th>
+<th class="tableblock halign-left valign-top">01</th>
+<th class="tableblock halign-left valign-top">10</th>
+<th class="tableblock halign-left valign-top">11</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>∧</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">greater than</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">less than</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>≠</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">not equal (xor)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>∨</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">or</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>⍱</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">equal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>≥</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">greater than or equal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>≤</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">less than or equal (implication)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>⍲</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nand</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This is an issue on an implementer&#8217;s side, because many primitives mean many
+combinations, and writing decent code for each of them costs in labour as well
+as executable size (therefore instruction cache). Moreover, what qualifies as
+decent code for a boolean scan is a much higher bar than the snippet I showed
+above: APL uses packed bit vectors to represent boolean arrays, meaning that
+these operations have the potential to consume tens of elements per CPU cycle,
+while by a quick benchmark a naive implementation would handle about 0.6
+elements per cycle <sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>Telling which of these are really useful only looking at the truth tables is
+not trivial, and it really sucks as a user to learn that the operation
+that precisely solves your problem is shoddily implemented.</p>
+</div>
+<div class="paragraph">
+<p>Is there some way that we can reduce the implementation work without sacrificing
+the performance?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scan_composition_rules">Scan composition rules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The structure of the scan <code>⍺ f\ ⍵</code> is as follows:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="resources/boolean_scans/scan_base.svg" alt="scan base" width="345" height="250">
+</div>
+</div>
+<div class="paragraph">
+<p>suppose we want to do some pre-processing with a scalar function <code>g</code> to alter the behaviour of the scan:
+what we&#8217;d end up with is a data flow of this kind:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="resources/boolean_scans/scan_pre.svg" alt="scan pre" width="345" height="345">
+</div>
+</div>
+<div class="paragraph">
+<p>The motivation for looking at this is that preprocessing a boolean array with a
+unary scalar function is just about the cheapest thing we could do, in fact there
+is only one non-trivial boolean unary scalar function: boolean negation.
+Let&#8217;s keep this observation aside for now, and ask ourselves: is this operation still
+a scan? If so, what function operand should scan take to produce this result?</p>
+</div>
+<div class="paragraph">
+<p>it&#8217;s apparent that the right argument to <code>f</code> is being fed through <code>g</code> at each step in the
+iteration, so the answer is <code>{⍺ f (g ⍵)}</code>, which brings us to the simple equation</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-na">\</span><span class="tok-w"> </span><span class="tok-nv">g</span><span class="tok-na">¨</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">f</span><span class="tok-na">∘</span><span class="tok-nv">g</span><span class="tok-p">)</span><span class="tok-na">\</span><span class="tok-w"> </span><span class="tok-bp">⍵</span></code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Equivalent Haskell</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="haskell"><span></span><span class="tok-nf">scanl</span><span class="tok-w"> </span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-n">ys</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">scanl</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nf">\</span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-w"> </span><span class="tok-ow">-&gt;</span><span class="tok-w"> </span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">))</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">ys</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="paragraph">
+<p>if <code>g</code> is any function, where <code>∘</code> is APL&#8217;s composition operator "jot" that satisfies</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-na">∘</span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>it&#8217;s a little trickier to see what effect post-processing with <code>g</code> would have:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="resources/boolean_scans/scan_post.svg" alt="scan post" width="345" height="345">
+</div>
+</div>
+<div class="paragraph">
+<p>It may look exactly like before, but notice that the input to each subsequent <code>f</code> call
+is not the same as the value that is sent to the output array, so this is not a scan!
+To fix this, let&#8217;s assume that <code>g</code> has a left inverse <code>g<sup>-1</sup></code> and insert it in between each pair of calls:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="resources/boolean_scans/scan_conj.svg" alt="scan conj" width="100%" height="250">
+</div>
+</div>
+<div class="paragraph">
+<p>This is a scan diagram using the function <code>{g ((g⍣¯1) ⍺) f ⍵}</code>, except the initial value <code>x</code> has been preprocessed with <code>g</code>.
+this gives the equation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-nv">g</span><span class="tok-na">¨</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-na">\</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-na">⍤</span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-na">⍣</span><span class="tok-m">¯1</span><span class="tok-na">⍛</span><span class="tok-nv">f</span><span class="tok-p">))</span><span class="tok-na">\</span><span class="tok-w"> </span><span class="tok-bp">⍵</span></code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Equivalent Haskell</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="haskell"><span></span><span class="tok-nf">map</span><span class="tok-w"> </span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">scanl</span><span class="tok-w"> </span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">ys</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">scanl</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nf">\</span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-w"> </span><span class="tok-ow">-&gt;</span><span class="tok-w"> </span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">ig</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">))</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="paragraph">
+<p>again some composition operators have been used</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-na">⍣</span><span class="tok-m">¯1</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-c1">⍝ APL can sometimes find inverses by itself!</span>
+<span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-na">⍤</span><span class="tok-nv">f</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-p">)</span>
+<span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-na">⍛</span><span class="tok-nv">f</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-w"> </span><span class="tok-bp">⍵</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and finally we can put these two relations together to find a third</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-w"> </span><span class="tok-nv">f</span><span class="tok-na">\</span><span class="tok-w"> </span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍵</span><span class="tok-w"> </span><span class="tok-kd">←→</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-w"> </span><span class="tok-bp">⍺</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-nv">g</span><span class="tok-na">⍤</span><span class="tok-p">(</span><span class="tok-nv">g</span><span class="tok-na">⍣</span><span class="tok-m">¯1</span><span class="tok-na">⍛</span><span class="tok-nv">f</span><span class="tok-na">∘</span><span class="tok-nv">g</span><span class="tok-p">)</span><span class="tok-na">\</span><span class="tok-w"> </span><span class="tok-bp">⍵</span></code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Equivalent Haskell</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="haskell"><span></span><span class="tok-nf">map</span><span class="tok-w"> </span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">scanl</span><span class="tok-w"> </span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-n">ys</span><span class="tok-p">))</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">scanl</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nf">\</span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-w"> </span><span class="tok-ow">-&gt;</span><span class="tok-w"> </span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">ig</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)))</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_truth_table_shuffles">Truth table shuffles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In particular, we are interested in seeing which pairs of primitives are
+related by one of these three relations, where <code>g</code> is the negation function <code>~</code>.
+We start with the truth tables of our primitives and analyze how they change under the
+transformations described above.</p>
+</div>
+<div class="paragraph">
+<p>We represent all of the truth tables at once as the array <code>a</code> with shape <code>10 2 2</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    a
+┌┌→──┐
+↓↓0 0│
+││0 1│
+││   │
+││0 0│
+││1 0│
+││   │
+││0 1│
+││0 0│
+││   │
+││0 1│
+││1 0│
+││   │
+││0 1│
+││1 1│
+││   │
+││1 0│
+││0 0│
+││   │
+││1 0│
+││0 1│
+││   │
+││1 0│
+││1 1│
+││   │
+││1 1│
+││0 1│
+││   │
+││1 1│
+││1 0│
+└└~──┘</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Composing on the right argument with <code>~</code> is the same as reversing the last axis with
+the <code>⌽</code> function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-w">    </span><span class="tok-nv">pre</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">⌽</span><span class="tok-sr">[</span><span class="tok-m">2</span><span class="tok-sr">]</span><span class="tok-w"> </span><span class="tok-nv">a</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Negating the output is just a matter of negating each entry of the table; if we do this, we must also
+negate the left argument, which we do by reversing the first axis of each truth table (the middle axis here).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-w">    </span><span class="tok-nv">post</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">~</span><span class="tok-w"> </span><span class="tok-o">⌽</span><span class="tok-sr">[</span><span class="tok-m">1</span><span class="tok-sr">]</span><span class="tok-w"> </span><span class="tok-nv">a</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And of course we can do both transformations at once</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-w">    </span><span class="tok-nv">both</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">~</span><span class="tok-w"> </span><span class="tok-o">⌽</span><span class="tok-sr">[</span><span class="tok-m">1</span><span class="tok-sr">]</span><span class="tok-w"> </span><span class="tok-o">⌽</span><span class="tok-sr">[</span><span class="tok-m">2</span><span class="tok-sr">]</span><span class="tok-w"> </span><span class="tok-nv">a</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can find out who&#8217;s related to whom by searching for the truth tables we got in the original array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-w">    </span><span class="tok-nv">index</span><span class="tok-w"> </span><span class="tok-kd">←</span><span class="tok-w"> </span><span class="tok-o">↑</span><span class="tok-p">(</span><span class="tok-o">⊂</span><span class="tok-nv">a</span><span class="tok-p">)</span><span class="tok-o">⍳</span><span class="tok-na">¨</span><span class="tok-nv">a</span><span class="tok-w"> </span><span class="tok-nv">pre</span><span class="tok-w"> </span><span class="tok-nv">post</span><span class="tok-w"> </span><span class="tok-nv">both</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌→──────────────────┐
+↓0 1 2 3 4 5 6 7 8 9│
+│1 0 5 6 7 2 3 4 9 8│
+│7 4 9 3 1 8 6 0 5 2│
+│4 7 8 6 0 9 3 1 2 5│
+└~──────────────────┘</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that we know this, we can index into the list of the symbols the truth tables referred to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="apl"><span></span><span class="tok-w">    </span><span class="tok-s1">&#39;∧&gt;&lt;≠∨⍱=≥≤⍲&#39;</span><span class="tok-sr">[</span><span class="tok-nv">index</span><span class="tok-sr">]</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌→─────────┐
+↓∧&gt;&lt;≠∨⍱=≥≤⍲│
+│&gt;∧⍱=≥&lt;≠∨⍲≤│
+│≥∨⍲≠&gt;≤=∧⍱&lt;│
+│∨≥≤=∧⍲≠&gt;&lt;⍱│
+└──────────┘</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, how do we interpret this? along the top row are the
+original symbols; the second row are the symbols that
+are related to the top row by the first scan equation we derived
+above, i.e. <code>⍺ p\ ~⍵ ←→ ⍺ q\ ⍵</code>.
+The third and fourth row, similarly, are related to the first
+via <code>~ (~⍺) p\ ⍵ ←→ ⍺ q\ ⍵</code> and <code>~ (~⍺) p\ ~⍵ ←→ ⍺ q\ ⍵</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can see that the set <code>∧</code>, <code>&lt;</code>, <code>≠</code> covers all columns at
+least once, therefore if we provide fast implementations of each of
+these, we can derive decent implementations of the others by just
+applying these symmetries. This cuts down on implementation time
+and executable size, without completely sacrificing performance.</p>
+</div>
+<div class="paragraph">
+<p>None of this is completely new, by the way. The trick <code>⍺ ≠\ ⍵ ←→ ⍺ =\ ~⍵</code>
+is well known among K programmers, since K doesn&#8217;t have a builtin
+not-equal operator. In the same vein, many of these shortcuts
+are employed in the CBQN interpreter for BQN for the
+<a href="https://github.com/dzaima/CBQN/blob/af583e19566a032b89e0077b866b0ba0dcc2a365/src/builtins/scan.c#L328:">less common
+combinations</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_appendix_a_brainstorming_and_observations">Appendix A. Brainstorming and observations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I originally discussed this on the APL farm discord server, where some of the users
+made interesting comments:</p>
+</div>
+<div class="sect2">
+<h3 id="_truth_tables_as_finite_state_machines">Truth tables as finite state machines</h3>
+<div class="paragraph">
+<p>In the K language, the form <code>x f\ y</code>, is equivalent to the <code>x a\ y</code> form, where
+<code>a</code> is a matrix containing the values of <code>f</code> on pairs of non-negative integers.
+This form advances the state machine
+<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>
+with transitions defined in <code>a</code> over the sequence <code>y</code>. In this interpretation, the concrete
+transformations we applied to the truth tables take the place of the
+composition operators in the original equations we defined.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="k"><span></span><span class="tok-p">(</span><span class="tok-w">  </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-o">\</span><span class="tok-w"> </span><span class="tok-o">~</span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-n">x</span><span class="tok-w">  </span><span class="tok-p">(</span><span class="tok-w">  </span><span class="tok-o">|&#39;</span><span class="tok-n">a</span><span class="tok-p">)</span><span class="tok-o">\</span><span class="tok-w"> </span><span class="tok-n">y</span>
+<span class="tok-p">(</span><span class="tok-o">~</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-o">\</span><span class="tok-w">  </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-o">~</span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-o">~|</span><span class="tok-w">  </span><span class="tok-n">a</span><span class="tok-p">)</span><span class="tok-o">\</span><span class="tok-w"> </span><span class="tok-n">y</span>
+<span class="tok-p">(</span><span class="tok-o">~</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-o">\</span><span class="tok-w"> </span><span class="tok-o">~</span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-o">~</span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-o">~||&#39;</span><span class="tok-n">a</span><span class="tok-p">)</span><span class="tok-o">\</span><span class="tok-w"> </span><span class="tok-n">y</span></code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Equivalent Haskell</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="haskell"><span></span><span class="tok-nf">runFsm</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">ys</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">scan</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-nf">\</span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-w"> </span><span class="tok-ow">-&gt;</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">a</span><span class="tok-w"> </span><span class="tok-o">!!</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">!!</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-n">ys</span>
+
+<span class="tok-w">            </span><span class="tok-n">runFsm</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">runFsm</span><span class="tok-w">      </span><span class="tok-n">x</span><span class="tok-w">  </span><span class="tok-p">(</span><span class="tok-w">                  </span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-n">reverse</span><span class="tok-w">           </span><span class="tok-n">a</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span>
+<span class="tok-nf">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">runFsm</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w">             </span><span class="tok-n">ys</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">runFsm</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-p">))</span><span class="tok-w">               </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">reverse</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span>
+<span class="tok-nf">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">runFsm</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span><span class="tok-w"> </span><span class="tok-ow">=</span><span class="tok-w"> </span><span class="tok-n">runFsm</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-p">))</span><span class="tok-w"> </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">map</span><span class="tok-w"> </span><span class="tok-n">reverse</span><span class="tok-w"> </span><span class="tok-o">$</span><span class="tok-w"> </span><span class="tok-n">reverse</span><span class="tok-w"> </span><span class="tok-n">a</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">ys</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
+<h3 id="_invariants_under_the_given_transformations">Invariants under the given transformations</h3>
+<div class="paragraph">
+<p>The transformations we gave permute the rows or columns of the tables
+and/or negate the entries. This implies that the number of ones in the tables either remains
+equal to 2 or flip-flops between 1 and 3 <sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>. Moreover, since the transformations commute and are self-inverses,
+our relation is an equivalence relation; we deduce that <code>=</code> and <code>≠</code> are in a class of their
+own, with one transformation fixing both operations, and the others fill at least two more.</p>
+</div>
+<div class="paragraph">
+<p>On these, the transformation <code>~⌽[0]a</code> can be applied so that there are 3 0s,
+then <code>⌽[1]a</code> can be applied to ensure that the single <code>1</code> entry occurs on the second column.
+The only two possibilities are distinguished by whether the <code>1</code> value is at
+<code>a[1;1]</code> (which gives <code>∧</code>) or at <code>a[0;1]</code> (which gives <code>&lt;</code>)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_appendix_b_efficient_implementation_of_boolean_scans">Appendix B. Efficient implementation of boolean scans</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_xor">Xor</h3>
+<div class="paragraph">
+<p>A xor scan on a machine word can be implemented efficiently in a few instructions by a typical prefix doubling
+technique, similar to the one described by <a href="https://graphics.stanford.edu/~seander/bithacks.html#ParityParallel:">Bit Twiddling Hacks</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-nf">xorscan_word</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">^=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">^=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">2</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">^=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">4</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">^=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">8</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">^=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">16</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">^=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">32</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We only need to handle the carry from the previous word. The typical way to do this would be
+to xor it with the first bit in <code>word</code>, but this is actually sub-optimal: notice that <code>carry</code>
+is needed at the very start of each iteration and only updated at the very end, which ties all iterations
+in a very long dependency chain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">xorscan_bad</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">bool</span><span class="tok-w"> </span><span class="tok-n">initial</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-n">words</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">uint64_t</span><span class="tok-p">)</span><span class="tok-n">initial</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">        </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">xorscan_word</span><span class="tok-p">(</span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">^</span><span class="tok-w"> </span><span class="tok-n">carry</span><span class="tok-p">);</span>
+<span class="tok-w">        </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&gt;&gt;</span><span class="tok-w"> </span><span class="tok-mi">63</span><span class="tok-p">;</span>
+<span class="tok-w">        </span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This compiles to the following core loop, which runs at around 3-4 bits per cycle.
+(all the timings I&#8217;ll give are for memory that is hot in cache, otherwise memory latency
+would dominate runtime)</p>
+</div>
+<details>
+<summary class="title">Assembly output</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="asm"><span></span><span class="tok-nl">.loop:</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-p">(</span><span class="tok-nv">%rdx</span><span class="tok-p">),</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">add</span><span class="tok-w">    </span><span class="tok-no">$0x8</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">lea</span><span class="tok-w">    </span><span class="tok-p">(</span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">),</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">lea</span><span class="tok-w">    </span><span class="tok-mi">0x0</span><span class="tok-p">(,</span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-mi">4</span><span class="tok-p">),</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rcx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x4</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rcx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x8</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rcx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x10</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rcx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x20</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rcx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,-</span><span class="tok-mi">0x8</span><span class="tok-p">(</span><span class="tok-nv">%rdx</span><span class="tok-p">)</span>
+<span class="tok-w">    </span><span class="tok-nf">shr</span><span class="tok-w">    </span><span class="tok-no">$0x3f</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">cmp</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rsi</span>
+<span class="tok-w">    </span><span class="tok-nf">jne</span><span class="tok-w">    </span><span class="tok-no">.loop</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="paragraph">
+<p>On a CPU with super-scalar execution, it would be nice if we could delay the usage of the previous result until
+the latest possible time.
+Fortunately xor is associative, so we can just broadcast the carry bit to every position in the final result: now
+the CPU is free to start executing <code>xorscan_word</code> for the next iteration before the result of the previous one is ready.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">xorscan_good</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">bool</span><span class="tok-w"> </span><span class="tok-n">initial</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-n">words</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">uint64_t</span><span class="tok-p">)</span><span class="tok-n">initial</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">        </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">^</span><span class="tok-w"> </span><span class="tok-n">xorscan_word</span><span class="tok-p">(</span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]);</span>
+<span class="tok-w">        </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&gt;&gt;</span><span class="tok-w"> </span><span class="tok-mi">63</span><span class="tok-p">);</span>
+<span class="tok-w">        </span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is much faster, processing up to 10.5 bits per cycle.</p>
+</div>
+<details>
+<summary class="title">Assembly output</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="asm"><span></span><span class="tok-nl">.loop:</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-p">(</span><span class="tok-nv">%rcx</span><span class="tok-p">),</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">add</span><span class="tok-w">    </span><span class="tok-no">$0x8</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">lea</span><span class="tok-w">    </span><span class="tok-p">(</span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">),</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">lea</span><span class="tok-w">    </span><span class="tok-mi">0x0</span><span class="tok-p">(,</span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-mi">4</span><span class="tok-p">),</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x4</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x8</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x10</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">shl</span><span class="tok-w">    </span><span class="tok-no">$0x20</span><span class="tok-p">,</span><span class="tok-nv">%rdx</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rsi</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rsi</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,-</span><span class="tok-mi">0x8</span><span class="tok-p">(</span><span class="tok-nv">%rcx</span><span class="tok-p">)</span>
+<span class="tok-w">    </span><span class="tok-nf">sar</span><span class="tok-w">    </span><span class="tok-no">$0x3f</span><span class="tok-p">,</span><span class="tok-nv">%rsi</span>
+<span class="tok-w">    </span><span class="tok-nf">cmp</span><span class="tok-w">    </span><span class="tok-nv">%rcx</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">jne</span><span class="tok-w">    </span><span class="tok-no">.loop</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+<div class="paragraph">
+<p>if the CPU supports a carry-less multiply instruction (many modern CPUs do!) then <code>xorscan_word</code> can be implemented as carry-less multiplication with the word <code>0xffffffffffffffff</code> (all ones).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_and">And</h3>
+<div class="paragraph">
+<p>All of the above (except for the carry-less multiply) can be applied verbatim, by replacing <code>^</code> with <code>&amp;</code>; however there is a faster
+method available.</p>
+</div>
+<div class="paragraph">
+<p>Firstly, a single-word and scan can be implemented much more simply than xor
+<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-nf">andscan_word</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-w"> </span><span class="tok-o">~</span><span class="tok-p">(</span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">+</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">);</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This works because adding one turns the first run of ones into a run of
+zeros, then the negation turns the initial run of zeros back into a run of ones,
+as well as negating everything else. The final bitwise and
+sees two matching runs of ones, a matching pair of zero bits, and mismatched
+bits everywhere else.</p>
+</div>
+<div class="paragraph">
+<p>here is an example, with the bits ordered from least to most significant.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>word              </code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>11100011010101011</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>word+1            </code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00010011010101011</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>~(word + 1)       </code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>11101100101010100</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>word &amp; ~(word + 1)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>11100000000000000</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To extend this to work on an array of words, we observe that at most one word
+will need an actual scan, because everything before it is known to be all ones
+already, and everything after it can be unconditionally set to zero.</p>
+</div>
+<div class="paragraph">
+<p>The full implementation might be something like the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">andscan</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">bool</span><span class="tok-w"> </span><span class="tok-n">initial</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-n">words</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">initial</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">        </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">            </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">];</span>
+<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-o">~</span><span class="tok-n">word</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">                </span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">andscan_word</span><span class="tok-p">(</span><span class="tok-n">word</span><span class="tok-p">);</span>
+<span class="tok-w">                </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">;</span>
+<span class="tok-w">                </span><span class="tok-k">break</span><span class="tok-p">;</span>
+<span class="tok-w">            </span><span class="tok-p">}</span>
+<span class="tok-w">        </span><span class="tok-p">}</span>
+<span class="tok-w">    </span><span class="tok-p">}</span>
+<span class="tok-w">    </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">        </span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This produces two separate loops, the first and most intensive of them can do 62 bits per cycle, while the
+other gets compiled into a call to memset.</p>
+</div>
+<details>
+<summary class="title">Assembly output</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre>.loop:
+    add    $0x8,%rcx
+    cmp    %rax,%rdx
+    je     .found
+    mov    (%rcx),%rsi
+    inc    %rax
+    cmp    $0xffffffffffffffff,%rsi
+    je     .loop</pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
+<h3 id="_less_than">Less-than</h3>
+<div class="paragraph">
+<p>This is the most complicated case, and the solution I&#8217;ll present comes from the
+<a href="https://github.com/simdjson/simdjson/blob/f807de973580fb22cc0db6b3b896716684b0266c/src/generic/stage1/json_escape_scanner.h#L50-L71:">simdjson</a>
+library, which uses it to find escaped characters. In fact, the intuition behind
+what <code>&lt;\</code> does is that it turns off every <code>1</code> bit that is at an odd offset in
+a contiguous sequence of <code>1</code>s, which is exactly what you need to figure out
+which backslashes in a string work as escapes and which are escaped.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-nf">ltscan_word</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">guard</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&lt;&lt;</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">|</span><span class="tok-w"> </span><span class="tok-mh">0xaaaaaaaaaaaaaaaa</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">parity</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">guard</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-k">return</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">parity</span><span class="tok-w"> </span><span class="tok-o">^</span><span class="tok-w"> </span><span class="tok-mh">0xaaaaaaaaaaaaaaaa</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-o">&amp;</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is an example, again in little endian bit order.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>word</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1110000111100111</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>word &lt;&lt; 1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0111000011110011</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>guard</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0111010111110111</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1110010000010000</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>parity ^ odd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1011000101000101</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1010000101000101</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Shifting and setting the odd bits controls whether or not a borrow chain is
+initiated in the subtraction: the start of a run of <code>1</code>s is set to <code>0</code> if it
+is at an even position, otherwise it stays <code>1</code>. The last element of a run is
+also moved past the end to stop the borrow chain. Then subtracting the original
+bit mask creates a chain of borrows which leaves every bit set in the first
+case, and just leaves every bit unset in the second case. If we now flip every
+odd bit, we will have the even bits set in the runs that start at even
+positions, the odd bits set in the runs that start at odd positions, and
+some garbage outside of these runs which we clean up with bitwise and.</p>
+</div>
+<div class="paragraph">
+<p>Like the xor case, the trivial way to chain these together is to clear the
+first bit whenever the last bit of the previous result is set, though
+Marshall&#8217;s
+<a href="https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans:">notes</a>
+on this also mention a smarter way to reduce the length of the critical path.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">ltscan</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">bool</span><span class="tok-w"> </span><span class="tok-n">init</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-n">words</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">uint64_t</span><span class="tok-p">)</span><span class="tok-n">init</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">size_t</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-n">n</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">        </span><span class="tok-kt">uint64_t</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">ltscan_word</span><span class="tok-p">(</span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&amp;~</span><span class="tok-w"> </span><span class="tok-n">carry</span><span class="tok-p">);</span>
+<span class="tok-w">        </span><span class="tok-n">carry</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-w"> </span><span class="tok-o">&gt;&gt;</span><span class="tok-w"> </span><span class="tok-mi">63</span><span class="tok-p">;</span>
+<span class="tok-w">        </span><span class="tok-n">words</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">word</span><span class="tok-p">;</span>
+<span class="tok-w">    </span><span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This particular version can do 8.8 bits per cycle.</p>
+</div>
+<details>
+<summary class="title">Assembly output</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="asm"><span></span><span class="tok-nl">.loop:</span>
+<span class="tok-w">    </span><span class="tok-nf">andn</span><span class="tok-w">   </span><span class="tok-p">(</span><span class="tok-nv">%rsi</span><span class="tok-p">),</span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">add</span><span class="tok-w">    </span><span class="tok-no">$0x8</span><span class="tok-p">,</span><span class="tok-nv">%rsi</span>
+<span class="tok-w">    </span><span class="tok-nf">lea</span><span class="tok-w">    </span><span class="tok-p">(</span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-mi">1</span><span class="tok-p">),</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">or</span><span class="tok-w">     </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">sub</span><span class="tok-w">    </span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">xor</span><span class="tok-w">    </span><span class="tok-nv">%rdx</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">and</span><span class="tok-w">    </span><span class="tok-nv">%rdi</span><span class="tok-p">,</span><span class="tok-nv">%rax</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">mov</span><span class="tok-w">    </span><span class="tok-nv">%rax</span><span class="tok-p">,-</span><span class="tok-mi">0x8</span><span class="tok-p">(</span><span class="tok-nv">%rsi</span><span class="tok-p">)</span>
+<span class="tok-w">    </span><span class="tok-nf">shr</span><span class="tok-w">    </span><span class="tok-no">$0x3f</span><span class="tok-p">,</span><span class="tok-nv">%rdi</span>
+<span class="tok-w">    </span><span class="tok-nf">cmp</span><span class="tok-w">    </span><span class="tok-nv">%rsi</span><span class="tok-p">,</span><span class="tok-nv">%rcx</span>
+<span class="tok-w">    </span><span class="tok-nf">jne</span><span class="tok-w">    </span><span class="tok-no">.loop</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. yes, a sufficiently smart(tm) compiler can do this with user-defined code too, but that&#8217;s expensive and APL existed at a time where interpreters had to be very simple.
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. when called on a non-empty list
+</div>
+<div class="footnote" id="_footnotedef_3">
+<a href="#_footnoteref_3">3</a>. "direct function", APL&#8217;s name for a lambda; <code>⍺</code> is the implicitly defined first argument, and <code>⍵</code> is the second.
+</div>
+<div class="footnote" id="_footnotedef_4">
+<a href="#_footnoteref_4">4</a>. For those who know APL already, yes this is only really true if the function argument is associative, because traditionally APL has a really idiosyncratic scan operator. I&#8217;ll consider an imaginary variant of APL that defines scan as above, for example BQN and K fit the bill.
+</div>
+<div class="footnote" id="_footnotedef_5">
+<a href="#_footnoteref_5">5</a>. I recently found an idiom reported in an old IBM document that used a fold with modulo to check if the last element of a list was one or not. I assume that operation was recognized by the interpreter, but it would have been an incredibly bad idea to call that code idiomatic if it weren&#8217;t.
+</div>
+<div class="footnote" id="_footnotedef_6">
+<a href="#_footnoteref_6">6</a>. there is a linear dependency chain through all of the data, so the absolute maximum a scalar loop could do is one element per cycle
+</div>
+<div class="footnote" id="_footnotedef_7">
+<a href="#_footnoteref_7">7</a>. suggested by DiscoDoug
+</div>
+<div class="footnote" id="_footnotedef_8">
+<a href="#_footnoteref_8">8</a>. suggested by Marshall
+</div>
+<div class="footnote" id="_footnotedef_9">
+<a href="#_footnoteref_9">9</a>. Marshall describes this in his <a href="https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans:">implementation notes</a> for BQN
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2026-08-26 23:30:00 +0200
+</div>
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains("stemblock")) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
