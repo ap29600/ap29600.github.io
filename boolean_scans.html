@@ -296,8 +296,7 @@ case the first element is treated as an initial value, and is returned
 unchanged, concatenated with the scan of the rest of the collection.</p>
 </div>
 <div class="paragraph">
-<p>APL <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>
-represents these functions with the operators <code>/</code> and <code>\</code>, so that</p>
+<p>APL represents these functions with the operators <code>/</code> and <code>\</code>, so that</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -306,9 +305,11 @@ represents these functions with the operators <code>/</code> and <code>\</code>,
 </div>
 </div>
 <div class="paragraph">
-<p>In the rest of this article, I&#8217;ll be using APL to write some functional equations.
-The main ones will be translated to Haskell for readers who aren&#8217;t
-comfortable reading APL.</p>
+<p>In the rest of this article, I&#8217;ll be using a fantasy dialect of APL modified to
+have better behaved fold and scan semantics <sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup> to write some functional equations. If you don&#8217;t know APL,
+don&#8217;t worry about it, just pretend this is the scan from any traditional
+functional language like Lisp, Haskell, Ocaml, etc. The main equations will
+also be translated to Haskell.</p>
 </div>
 </div>
 </div>
@@ -342,7 +343,7 @@ around" in the array, and they&#8217;re APL&#8217;s most idiomatic way to do so.
 <h2 id="_case_study_resolving_quotes">Case study: Resolving quotes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>say you have a string of text containing quote characters, and you want to tell
+<p>Say you have a string of text containing quote characters, and you want to tell
 which positions in the string are inside a pair of quotes or not: if you were to
 write that in C you&#8217;d do something like this:</p>
 </div>
@@ -357,7 +358,7 @@ write that in C you&#8217;d do something like this:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>while in APL you would write the following, where the result is an array containing the values of
+<p>While in APL you would write the following, where the result is an array containing the values of
 <code>in_quotes</code> from the previous example. The idea is to scan over the boolean results from comparing
 each character in the string with the <code>"</code> character.</p>
 </div>
@@ -523,7 +524,7 @@ the performance?</p>
 </div>
 </div>
 <div class="paragraph">
-<p>suppose we want to do some pre-processing with a scalar function <code>g</code> to alter the behaviour of the scan:
+<p>Suppose we want to do some pre-processing with a function <code>g</code> to alter the behaviour of the scan:
 what we&#8217;d end up with is a data flow of this kind:</p>
 </div>
 <div class="imageblock">
@@ -539,7 +540,7 @@ Let&#8217;s keep this observation aside for now, and ask ourselves: is this oper
 a scan? If so, what function operand should scan take to produce this result?</p>
 </div>
 <div class="paragraph">
-<p>it&#8217;s apparent that the right argument to <code>f</code> is being fed through <code>g</code> at each step in the
+<p>It&#8217;s apparent that the right argument to <code>f</code> is being fed through <code>g</code> at each step in the
 iteration, so the answer is <code>{⍺ f (g ⍵)}</code>, which brings us to the simple equation</p>
 </div>
 <div class="listingblock">
@@ -558,7 +559,7 @@ iteration, so the answer is <code>{⍺ f (g ⍵)}</code>, which brings us to the
 </div>
 </details>
 <div class="paragraph">
-<p>if <code>g</code> is any function, where <code>∘</code> is APL&#8217;s composition operator "jot" that satisfies</p>
+<p>If <code>g</code> is any function, where <code>∘</code> is APL&#8217;s composition operator "jot" that satisfies</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -566,7 +567,7 @@ iteration, so the answer is <code>{⍺ f (g ⍵)}</code>, which brings us to the
 </div>
 </div>
 <div class="paragraph">
-<p>it&#8217;s a little trickier to see what effect post-processing with <code>g</code> would have:</p>
+<p>It&#8217;s a little trickier to see what effect post-processing with <code>g</code> would have:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -603,7 +604,7 @@ this gives the equation:</p>
 </div>
 </details>
 <div class="paragraph">
-<p>again some composition operators have been used</p>
+<p>Again some composition operators have been used:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -613,7 +614,7 @@ this gives the equation:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>and finally we can put these two relations together to find a third</p>
+<p>And finally we can put these two relations together to find a third.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -767,7 +768,7 @@ and executable size, without completely sacrificing performance.</p>
 is well known among K programmers, since K doesn&#8217;t have a builtin
 not-equal operator. In the same vein, many of these shortcuts
 are employed in the CBQN interpreter for BQN for the
-<a href="https://github.com/dzaima/CBQN/blob/af583e19566a032b89e0077b866b0ba0dcc2a365/src/builtins/scan.c#L328:">less common
+<a href="https://github.com/dzaima/CBQN/blob/af583e19566a032b89e0077b866b0ba0dcc2a365/src/builtins/scan.c#L328">less common
 combinations</a>.</p>
 </div>
 </div>
@@ -837,7 +838,7 @@ The only two possibilities are distinguished by whether the <code>1</code> value
 <h3 id="_xor">Xor</h3>
 <div class="paragraph">
 <p>A xor scan on a machine word can be implemented efficiently in a few instructions by a typical prefix doubling
-technique, similar to the one described by <a href="https://graphics.stanford.edu/~seander/bithacks.html#ParityParallel:">Bit Twiddling Hacks</a></p>
+technique, similar to the one described by <a href="https://graphics.stanford.edu/~seander/bithacks.html#ParityParallel">Bit Twiddling Hacks</a></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -964,7 +965,7 @@ the CPU is free to start executing <code>xorscan_word</code> for the next iterat
 </div>
 </details>
 <div class="paragraph">
-<p>if the CPU supports a carry-less multiply instruction (many modern CPUs do!) then <code>xorscan_word</code> can be implemented as carry-less multiplication with the word <code>0xffffffffffffffff</code> (all ones).</p>
+<p>If the CPU supports a carry-less multiply instruction (many modern CPUs do!) then <code>xorscan_word</code> can be implemented as carry-less multiplication with the word <code>0xffffffffffffffff</code> (all ones).</p>
 </div>
 </div>
 <div class="sect2">
@@ -992,7 +993,7 @@ sees two matching runs of ones, a matching pair of zero bits, and mismatched
 bits everywhere else.</p>
 </div>
 <div class="paragraph">
-<p>here is an example, with the bits ordered from least to most significant.</p>
+<p>Here is an example, with the bits ordered from least to most significant.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1072,7 +1073,7 @@ other gets compiled into a call to memset.</p>
 <h3 id="_less_than">Less-than</h3>
 <div class="paragraph">
 <p>This is the most complicated case, and the solution I&#8217;ll present comes from the
-<a href="https://github.com/simdjson/simdjson/blob/f807de973580fb22cc0db6b3b896716684b0266c/src/generic/stage1/json_escape_scanner.h#L50-L71:">simdjson</a>
+<a href="https://github.com/simdjson/simdjson/blob/f807de973580fb22cc0db6b3b896716684b0266c/src/generic/stage1/json_escape_scanner.h#L50-L71">simdjson</a>
 library, which uses it to find escaped characters. In fact, the intuition behind
 what <code>&lt;\</code> does is that it turns off every <code>1</code> bit that is at an odd offset in
 a contiguous sequence of <code>1</code>s, which is exactly what you need to figure out
@@ -1137,7 +1138,7 @@ some garbage outside of these runs which we clean up with bitwise and.</p>
 <p>Like the xor case, the trivial way to chain these together is to clear the
 first bit whenever the last bit of the previous result is set, though
 Marshall&#8217;s
-<a href="https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans:">notes</a>
+<a href="https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans">notes</a>
 on this also mention a smarter way to reduce the length of the critical path.</p>
 </div>
 <div class="listingblock">
@@ -1184,22 +1185,22 @@ on this also mention a smarter way to reduce the length of the critical path.</p
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. yes, a sufficiently smart(tm) compiler can do this with user-defined code too, but that&#8217;s expensive and APL existed at a time where interpreters had to be very simple.
+<a href="#_footnoteref_1">1</a>. Yes, a sufficiently smart(tm) compiler can do this with user-defined code too, but that&#8217;s expensive and APL existed at a time where interpreters had to be very simple.
 </div>
 <div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. when called on a non-empty list
+<a href="#_footnoteref_2">2</a>. When called on a non-empty list
 </div>
 <div class="footnote" id="_footnotedef_3">
 <a href="#_footnoteref_3">3</a>. "direct function", APL&#8217;s name for a lambda; <code>⍺</code> is the implicitly defined first argument, and <code>⍵</code> is the second.
 </div>
 <div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. For those who know APL already, yes this is only really true if the function argument is associative, because traditionally APL has a really idiosyncratic scan operator. I&#8217;ll consider an imaginary variant of APL that defines scan as above, for example BQN and K fit the bill.
+<a href="#_footnoteref_4">4</a>. For those who know APL already, APL&#8217;s scan is only equivalent to what I wrote if the function argument is associative, because traditionally APL has a really idiosyncratic scan operator. I&#8217;ll consider an imaginary variant of APL that defines scan to operate left to right and with an explicitly given initial value; dzaima/APL, BQN and K all do have this version of scan, but are otherwise incompatible with the rest of the code in this article. KAP is almost a good fit, but doesn&#8217;t support giving an initial value to scan, which introduces ugly edge cases to the equations.
 </div>
 <div class="footnote" id="_footnotedef_5">
 <a href="#_footnoteref_5">5</a>. I recently found an idiom reported in an old IBM document that used a fold with modulo to check if the last element of a list was one or not. I assume that operation was recognized by the interpreter, but it would have been an incredibly bad idea to call that code idiomatic if it weren&#8217;t.
 </div>
 <div class="footnote" id="_footnotedef_6">
-<a href="#_footnoteref_6">6</a>. there is a linear dependency chain through all of the data, so the absolute maximum a scalar loop could do is one element per cycle
+<a href="#_footnoteref_6">6</a>. There is a linear dependency chain through all of the data, so the absolute maximum a scalar loop could do is one element per cycle
 </div>
 <div class="footnote" id="_footnotedef_7">
 <a href="#_footnoteref_7">7</a>. suggested by DiscoDoug
@@ -1208,12 +1209,12 @@ on this also mention a smarter way to reduce the length of the critical path.</p
 <a href="#_footnoteref_8">8</a>. suggested by Marshall
 </div>
 <div class="footnote" id="_footnotedef_9">
-<a href="#_footnoteref_9">9</a>. Marshall describes this in his <a href="https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans:">implementation notes</a> for BQN
+<a href="#_footnoteref_9">9</a>. Marshall describes this in his <a href="https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans">implementation notes</a> for BQN
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-26 23:30:00 +0200
+Last updated 2026-08-27 11:19:48 +0200
 </div>
 </div>
 <script type="text/x-mathjax-config">

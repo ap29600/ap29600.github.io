@@ -14,14 +14,14 @@ Array languages like APL are famous for using many pretty squiggles for
 representing built-in functions. These are called "primitives" and are
 different from user-defined functions, because the interpreters know about them
 and can do fancy optimizations with them, like recognizing special combinations
-footnote:[yes, a sufficiently smart(tm) compiler can do this with user-defined
+footnote:[Yes, a sufficiently smart(tm) compiler can do this with user-defined
 code too, but that's expensive and APL existed at a time where interpreters had
 to be very simple.].
 
 APL programmers have come to rely on these optimizations, for example the
 vectorization of some combinations like `\+/` (sum). if you were to feed your
 typical APL interpreter the function `{⍺+⍵}/` - which is functionally
-equivalent to `\+/` footnote:[when called on a non-empty list] since `{⍺+⍵}` is
+equivalent to `\+/` footnote:[When called on a non-empty list] since `{⍺+⍵}` is
 just a dfn footnote:["direct function", APL's name for a lambda; `⍺` is the 
 implicitly defined first argument, and `⍵` is the second.] over `\+` - the
 interpreter would execute it much slower, not just because executing the
@@ -46,21 +46,26 @@ In both cases an initial value may or may not be provided, and in the second
 case the first element is treated as an initial value, and is returned
 unchanged, concatenated with the scan of the rest of the collection.
 
-APL footnote:[For those who
-know APL already, yes this is only really true if the function argument 
-is associative, because traditionally APL has a really idiosyncratic 
-scan operator. I'll consider an imaginary variant of APL that defines 
-scan as above, for example BQN and K fit the bill.]
-represents these functions with the operators `/` and `\`, so that
+APL represents these functions with the operators `/` and `\`, so that
 
 ----
        10 = +/ 1 2 3 4
  1 3 6 10 = +\ 1 2 3 4
 ----
 
-In the rest of this article, I'll be using APL to write some functional equations.
-The main ones will be translated to Haskell for readers who aren't
-comfortable reading APL.
+In the rest of this article, I'll be using a fantasy dialect of APL modified to
+have better behaved fold and scan semantics footnote:[For those who know APL
+already, APL's scan is only equivalent to what I wrote if the function argument
+is associative, because traditionally APL has a really idiosyncratic scan
+operator. I'll consider an imaginary variant of APL that defines scan to
+operate left to right and with an explicitly given initial value; dzaima/APL,
+BQN and K all do have this version of scan, but are otherwise incompatible with
+the rest of the code in this article. KAP is almost a good fit, but doesn't
+support giving an initial value to scan, which introduces ugly edge cases to
+the equations.] to write some functional equations. If you don't know APL,
+don't worry about it, just pretend this is the scan from any traditional
+functional language like Lisp, Haskell, Ocaml, etc. The main equations will
+also be translated to Haskell.
 
 == Algorithmic esoterica
 
@@ -87,7 +92,7 @@ around" in the array, and they're APL's most idiomatic way to do so.
 
 == Case study: Resolving quotes
 
-say you have a string of text containing quote characters, and you want to tell
+Say you have a string of text containing quote characters, and you want to tell
 which positions in the string are inside a pair of quotes or not: if you were to 
 write that in C you'd do something like this:
 
@@ -101,7 +106,7 @@ for (size_t i = 0; i < n; ++i) {
 }
 ----
 
-while in APL you would write the following, where the result is an array containing the values of
+While in APL you would write the following, where the result is an array containing the values of
 `in_quotes` from the previous example. The idea is to scan over the boolean results from comparing
 each character in the string with the `"` character.
 
@@ -149,7 +154,7 @@ decent code for a boolean scan is a much higher bar than the snippet I showed
 above: APL uses packed bit vectors to represent boolean arrays, meaning that
 these operations have the potential to consume tens of elements per CPU cycle,
 while by a quick benchmark a naive implementation would handle about 0.6 
-elements per cycle footnote:[there is a linear dependency chain through all of the data, so
+elements per cycle footnote:[There is a linear dependency chain through all of the data, so
 the absolute maximum a scalar loop could do is one element per cycle]
 
 Telling which of these are really useful only looking at the truth tables is
@@ -197,7 +202,7 @@ digraph G {
 }
 ----
 
-suppose we want to do some pre-processing with a scalar function `g` to alter the behaviour of the scan:
+Suppose we want to do some pre-processing with a function `g` to alter the behaviour of the scan:
 what we'd end up with is a data flow of this kind:
 
 
@@ -248,7 +253,7 @@ is only one non-trivial boolean unary scalar function: boolean negation.
 Let's keep this observation aside for now, and ask ourselves: is this operation still
 a scan? If so, what function operand should scan take to produce this result?
 
-it's apparent that the right argument to `f` is being fed through `g` at each step in the
+It's apparent that the right argument to `f` is being fed through `g` at each step in the
 iteration, so the answer is `{⍺ f (g ⍵)}`, which brings us to the simple equation
 
 [source,apl]
@@ -265,14 +270,14 @@ scanl f x (map g ys) = scanl (\x y -> f x (g y)) x ys
 ----
 ====
 
-if `g` is any function, where `∘` is APL's composition operator "jot" that satisfies 
+If `g` is any function, where `∘` is APL's composition operator "jot" that satisfies 
 
 [source,apl]
 ----
 ⍺ f∘g ⍵ ←→ ⍺ f (g ⍵)
 ----
 
-it's a little trickier to see what effect post-processing with `g` would have:
+It's a little trickier to see what effect post-processing with `g` would have:
 
 [graphviz,"resources/boolean_scans/scan_post",format="svg"]
 ----
@@ -415,7 +420,7 @@ map g (scanl f x ys) = scanl (\x y -> g (f (ig x) y)) (g x) ys
 ====
 
 
-again some composition operators have been used
+Again some composition operators have been used:
 
 [source,apl]
 ----
@@ -424,7 +429,7 @@ again some composition operators have been used
 ⍺ (g⍛f) ⍵ ←→ (g ⍺) f ⍵
 ----
 
-and finally we can put these two relations together to find a third
+And finally we can put these two relations together to find a third.
 
 [source,apl]
 ----
@@ -558,7 +563,7 @@ None of this is completely new, by the way. The trick `⍺ ≠\ ⍵ ←→ ⍺ =
 is well known among K programmers, since K doesn't have a builtin
 not-equal operator. In the same vein, many of these shortcuts
 are employed in the CBQN interpreter for BQN for the 
-https://github.com/dzaima/CBQN/blob/af583e19566a032b89e0077b866b0ba0dcc2a365/src/builtins/scan.c#L328:[less common
+https://github.com/dzaima/CBQN/blob/af583e19566a032b89e0077b866b0ba0dcc2a365/src/builtins/scan.c#L328[less common
 combinations].
 
 
@@ -615,7 +620,7 @@ The only two possibilities are distinguished by whether the `1` value is at
 === Xor
 
 A xor scan on a machine word can be implemented efficiently in a few instructions by a typical prefix doubling
-technique, similar to the one described by https://graphics.stanford.edu/~seander/bithacks.html#ParityParallel:[Bit Twiddling Hacks]
+technique, similar to the one described by https://graphics.stanford.edu/~seander/bithacks.html#ParityParallel[Bit Twiddling Hacks]
 
 [source,c]
 ----
@@ -735,7 +740,7 @@ This is much faster, processing up to 10.5 bits per cycle.
 ----
 ====
 
-if the CPU supports a carry-less multiply instruction (many modern CPUs do!) then `xorscan_word` can be implemented as carry-less multiplication with the word `0xffffffffffffffff` (all ones).
+If the CPU supports a carry-less multiply instruction (many modern CPUs do!) then `xorscan_word` can be implemented as carry-less multiplication with the word `0xffffffffffffffff` (all ones).
 
 === And
 All of the above (except for the carry-less multiply) can be applied verbatim, by replacing `^` with `&`; however there is a faster
@@ -743,7 +748,7 @@ method available.
 
 Firstly, a single-word and scan can be implemented much more simply than xor
 footnote:[Marshall describes this in his
-https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans:[implementation
+https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans[implementation
 notes] for BQN].
 
 [source,c]
@@ -759,7 +764,7 @@ as well as negating everything else. The final bitwise and
 sees two matching runs of ones, a matching pair of zero bits, and mismatched
 bits everywhere else.
 
-here is an example, with the bits ordered from least to most significant.
+Here is an example, with the bits ordered from least to most significant.
 
 [columns=2]
 |===
@@ -816,7 +821,7 @@ other gets compiled into a call to memset.
 === Less-than
 
 This is the most complicated case, and the solution I'll present comes from the
-https://github.com/simdjson/simdjson/blob/f807de973580fb22cc0db6b3b896716684b0266c/src/generic/stage1/json_escape_scanner.h#L50-L71:[simdjson]
+https://github.com/simdjson/simdjson/blob/f807de973580fb22cc0db6b3b896716684b0266c/src/generic/stage1/json_escape_scanner.h#L50-L71[simdjson]
 library, which uses it to find escaped characters. In fact, the intuition behind
 what `<\` does is that it turns off every `1` bit that is at an odd offset in
 a contiguous sequence of ``1``s, which is exactly what you need to figure out 
@@ -856,7 +861,7 @@ some garbage outside of these runs which we clean up with bitwise and.
 Like the xor case, the trivial way to chain these together is to clear the
 first bit whenever the last bit of the previous result is set, though
 Marshall's
-https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans:[notes]
+https://mlochbaum.github.io/BQN/implementation/primitive/fold.html#booleans[notes]
 on this also mention a smarter way to reduce the length of the critical path.
 
 [source,c]
